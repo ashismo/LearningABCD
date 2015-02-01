@@ -6,9 +6,12 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -23,17 +26,36 @@ public class MainActivity extends ActionBarActivity {
                                 {"Q","R","S","T"}, {"U","V","W","X"},
                                 {"Y","Z"}};
         TableLayout tableLayout = (TableLayout)findViewById(R.id.alphabet);
+        ImageView imageView = (ImageView)findViewById(R.id.imageView_grid);
+        imageView.setVisibility(View.INVISIBLE);
 
         for(int i = 0 ; i < alphabet.length; i++) {
             TableRow row = new TableRow(this);
             row.setBackgroundColor(Color.GRAY);
             for(int j = 0; j < alphabet[i].length; j++) {
-                TextView textView = new TextView(this);
+                final TextView textView = new TextView(this);
                 textView.setText(alphabet[i][i]);
                 if(j % 2 == 0) {
                     textView.setBackgroundColor(Color.WHITE);
                 }
                 textView.setGravity(Gravity.CENTER);
+
+                textView.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v){
+                        Toast.makeText(getApplicationContext(),textView.getText() + "- APPLE" ,Toast.LENGTH_SHORT).show();
+                        ImageView imageView = (ImageView)findViewById(R.id.imageView_grid);
+                        imageView.setVisibility(View.VISIBLE);
+                        imageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                ImageView imageView = (ImageView)findViewById(R.id.imageView_grid);
+                                imageView.setVisibility(View.INVISIBLE);
+                            }
+                        });
+                    }
+                });
+
                 row.addView(textView);
             }
             tableLayout.addView(row);

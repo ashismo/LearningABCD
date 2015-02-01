@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -24,7 +25,7 @@ public class MainActivity extends ActionBarActivity {
         String alphabet[][] = {{"A","B","C","D"}, {"E","F","G","H"},
                                 {"I","J","K","L"}, {"M","N","O","P"},
                                 {"Q","R","S","T"}, {"U","V","W","X"},
-                                {"Y","Z"}};
+                                {"","Y","Z",""}};
         TableLayout tableLayout = (TableLayout)findViewById(R.id.alphabet);
         ImageView imageView = (ImageView)findViewById(R.id.imageView_grid);
         imageView.setVisibility(View.INVISIBLE);
@@ -32,10 +33,15 @@ public class MainActivity extends ActionBarActivity {
         for(int i = 0 ; i < alphabet.length; i++) {
             TableRow row = new TableRow(this);
             row.setBackgroundColor(Color.GRAY);
+            row.setMinimumHeight(70);
             for(int j = 0; j < alphabet[i].length; j++) {
                 final TextView textView = new TextView(this);
-                textView.setText(alphabet[i][i]);
-                if(j % 2 == 0) {
+
+                textView.setText(alphabet[i][j]);
+
+                //textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                textView.setTextSize(60);
+                if((i+j) % 2 == 0) {
                     textView.setBackgroundColor(Color.WHITE);
                 }
                 textView.setGravity(Gravity.CENTER);
@@ -46,6 +52,7 @@ public class MainActivity extends ActionBarActivity {
                         Toast.makeText(getApplicationContext(),textView.getText() + "- APPLE" ,Toast.LENGTH_SHORT).show();
                         ImageView imageView = (ImageView)findViewById(R.id.imageView_grid);
                         imageView.setVisibility(View.VISIBLE);
+//                        imageView.setImageResource(R.drawable.alphabet_a);
                         imageView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {

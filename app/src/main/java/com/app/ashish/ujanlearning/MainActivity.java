@@ -1,8 +1,12 @@
 package com.app.ashish.ujanlearning;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +17,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.InputStream;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -49,9 +55,20 @@ public class MainActivity extends ActionBarActivity {
                 textView.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View v){
-                        Toast.makeText(getApplicationContext(),textView.getText() + "- APPLE" ,Toast.LENGTH_SHORT).show();
+
                         ImageView imageView = (ImageView)findViewById(R.id.imageView_grid);
-                        imageView.setVisibility(View.VISIBLE);
+//                        Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+                        final String path = Environment.getRootDirectory().getPath() + "/res/alphabet_a.jpg";
+//                        Toast.makeText(getApplicationContext(),textView.getText() + "- " + path ,Toast.LENGTH_SHORT).show();
+                        try {
+                            InputStream si1 = getAssets().open("english_" + textView.getText().toString().toLowerCase() + ".jpg");
+                            Bitmap image = BitmapFactory.decodeStream(si1);
+                            Bitmap scaledImage = Bitmap.createScaledBitmap(image, imageView.getWidth(), imageView.getHeight(), true);
+                            imageView.setImageBitmap(scaledImage);
+                            imageView.setVisibility(View.VISIBLE);
+                        } catch(Exception e) {
+                            e.printStackTrace();
+                        }
 //                        imageView.setImageResource(R.drawable.alphabet_a);
                         imageView.setOnClickListener(new View.OnClickListener() {
                             @Override

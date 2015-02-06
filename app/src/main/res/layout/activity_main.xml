@@ -12,10 +12,11 @@
         android:layout_height="wrap_content"
         android:text="@string/english_caps"
         android:id="@+id/radio_eng_caps"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:checked="true" />
+        android:checked="true"
+        android:layout_marginTop="81dp"
+        android:layout_below="@+id/isSoundEnable"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
     <RadioButton
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -25,4 +26,13 @@
         android:layout_below="@+id/radio_eng_caps"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enable Sound"
+        android:id="@+id/isSoundEnable"
+        android:checked="true"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true" />
 </RelativeLayout>

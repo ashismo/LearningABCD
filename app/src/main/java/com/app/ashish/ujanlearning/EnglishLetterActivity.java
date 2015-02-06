@@ -168,7 +168,7 @@ public class EnglishLetterActivity extends ActionBarActivity {
                                 @Override
                                 public void onClick(View v) {
                                     // If text to speech conversion is stooped then close the image
-                                    if (ttobj != null && !ttobj.isSpeaking()) {
+                                    if (ttobj == null || !ttobj.isSpeaking()) {
                                         ImageView imageView = (ImageView) findViewById(R.id.imageView_grid);
                                         imageView.setVisibility(View.INVISIBLE);
                                     }

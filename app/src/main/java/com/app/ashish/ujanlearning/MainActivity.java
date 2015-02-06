@@ -27,14 +27,14 @@ import java.util.Random;
 
 
 public class MainActivity extends ActionBarActivity {
-
+    private CheckBox soundEnabledCkBox = null;
+    private boolean isSoundEnabled = true;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final CheckBox isSoundEnable = (CheckBox) findViewById(R.id.isSoundEnable);
-
+        addListenerOnSoundEnableCkBox();
         // Capital Letter
         RadioButton engCapitalLetter = (RadioButton)findViewById(R.id.radio_eng_caps);
         engCapitalLetter.setOnClickListener(new View.OnClickListener() {
@@ -42,7 +42,8 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), EnglishLetterActivity.class);
                 intent.putExtra(Constants.SELECTED_INTENT, Constants.ENGLISH_CAPS_VALUE);
-                if(isSoundEnable.isEnabled()) {
+                addListenerOnSoundEnableCkBox();
+                if(isSoundEnabled) {
                     intent.putExtra(Constants.SOUND_ENABLE_KEY, Constants.SOUND_ENABLE_VALUE.Y);
                 } else {
                     intent.putExtra(Constants.SOUND_ENABLE_KEY, Constants.SOUND_ENABLE_VALUE.N);
@@ -59,7 +60,8 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), EnglishLetterActivity.class);
                 intent.putExtra(Constants.SELECTED_INTENT, Constants.ENGLISH_SMALL_VALUE);
-                if(isSoundEnable.isEnabled()) {
+                addListenerOnSoundEnableCkBox();
+                if(isSoundEnabled) {
                     intent.putExtra(Constants.SOUND_ENABLE_KEY, Constants.SOUND_ENABLE_VALUE.Y);
                 } else {
                     intent.putExtra(Constants.SOUND_ENABLE_KEY, Constants.SOUND_ENABLE_VALUE.N);
@@ -91,5 +93,25 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void addListenerOnSoundEnableCkBox() {
+
+        soundEnabledCkBox = (CheckBox) findViewById(R.id.isSoundEnable);
+
+        soundEnabledCkBox.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                //is soundEnabledCkBox checked?
+                if (((CheckBox) v).isChecked()) {
+                    isSoundEnabled = true;
+                } else {
+                    isSoundEnabled = false;
+                }
+
+            }
+        });
+
     }
 }

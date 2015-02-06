@@ -6,5 +6,6 @@
     <string name="action_settings">Settings</string>
     <string name="action_english">English</string>
     <string name="title_activity_display_message">Learning Options</string>
-    <string name="english_caps">English - Capital</string>
+    <string name="english_caps">English Capital Letters</string>
+    <string name="english_small">English Small Letters</string>
 </resources>

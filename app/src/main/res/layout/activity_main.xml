@@ -16,4 +16,13 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:checked="true" />
+    <RadioButton
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/english_small"
+        android:id="@+id/radio_eng_small"
+        android:checked="true"
+        android:layout_below="@+id/radio_eng_caps"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

@@ -37,4 +37,12 @@
         android:src="#ff97ffee"
         android:visibility="invisible"
         android:layout_alignParentTop="true" />
+    <VideoView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/videoView_grid"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"/>
 </RelativeLayout>

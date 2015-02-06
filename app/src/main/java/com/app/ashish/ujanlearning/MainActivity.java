@@ -19,6 +19,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.app.ashish.constants.Constants;
+
 import java.io.InputStream;
 import java.util.Random;
 
@@ -29,11 +31,26 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        RadioButton radioButton = (RadioButton)findViewById(R.id.radio_eng_caps);
-        radioButton.setOnClickListener(new View.OnClickListener() {
+
+        // Capital Letter
+        RadioButton engCapitalLetter = (RadioButton)findViewById(R.id.radio_eng_caps);
+        engCapitalLetter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), EnglishCapsActivity.class);
+                Intent intent = new Intent(getApplicationContext(), EnglishLetterActivity.class);
+                intent.putExtra(Constants.SELECTED_INTENT, Constants.ENGLISH_CAPS_VALUE);
+                startActivity(intent);
+
+            }
+        });
+
+        // Small letter
+        RadioButton engSmallLetter = (RadioButton)findViewById(R.id.radio_eng_small);
+        engSmallLetter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), EnglishLetterActivity.class);
+                intent.putExtra(Constants.SELECTED_INTENT, Constants.ENGLISH_SMALL_VALUE);
                 startActivity(intent);
 
             }

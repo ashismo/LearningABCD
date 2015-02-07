@@ -28,12 +28,14 @@ import java.util.Random;
 
 
 public class EnglishLetterActivity extends ActionBarActivity {
-    TextToSpeech test2Speech = null;
+    private TextToSpeech test2Speech = null;
     //Add animation to the image
-    Animation mAnimationTopLeft = null;
-    Animation mAnimationBottomRight = null;
-    Animation mAnimationTopRight = null;
-    Animation mAnimationBottomLeft = null;
+    private Animation mAnimationTopLeft = null;
+    private Animation mAnimationBottomRight = null;
+    private Animation mAnimationTopRight = null;
+    private Animation mAnimationBottomLeft = null;
+    private final int numberIntentSelected = 3;
+    private boolean isAllNumberSelected = false;
 
     @Override
     public void finish(){
@@ -96,10 +98,39 @@ public class EnglishLetterActivity extends ActionBarActivity {
             alphabet = alphabet2;
         } else if(selectedIntent == Constants.ENGLISH_NUMBER_VALUE) {
             if(selectedNumberLimit == Constants.SELECTED_NUM_VALUE_10 || selectedNumberLimit == 0) {
-                String number10[][] = {{"", " 1 ", "", " 2 ", ""}, {" 3 ", "", " 4 ", "", " 5 "},
-                        {"6", "", "7", "", "8"}, {"", "9", "", "10", ""},
+//                String number10[][] = {{"", " 1 ", "", " 2 ", ""}, {" 3 ", "", " 4 ", "", " 5 "},
+//                        {"6", "", "7", "", "8"}, {"", "9", "", "10", ""},
+//                };
+                String number10[][] = {{" 1 ", " 2 "}, {" 3 ", " 4 "},
+                        {"5", "6"}, {"7", "8"},{"9", "10"}
                 };
                 alphabet = number10;
+            } else if(selectedNumberLimit == Constants.SELECTED_NUM_VALUE_20) {
+//                    String number20[][] = {{"", " 1 ", "", " 2 ", ""}, {" 3 ", "", " 4 ", "", " 5 "},
+//                            {"6", "", "7", "", "8"}, {"", "9", "", "10", ""},
+//                            {"", "11", "", "12", ""}, {"13", "", "14", "", "15"},
+//                            {"16", "", "17", "", "18"}, {"", "19", "", "20", ""}
+//                    };
+
+                        String number20[][] = {{" 1 ", " 2 ", " 3 ", " 4 "}, {" 5 ", " 6 ", " 7 ", " 8 "},
+                                {"9", "10", "11", "12"}, {"13", "14", "15", "16"},
+                                {"17", "18", "19", "20"}
+                        };
+                    alphabet = number20;
+            } else if(selectedNumberLimit == Constants.SELECTED_NUM_VALUE_100) {
+                int count = 1;
+                String number100[][] = new String[20][5];
+                for(int i = 0; i < number100.length; i++) {
+                    for(int j = 0; j < number100[i].length; j++) {
+                        if(i != 0) {
+                            number100[i][j] = "" + count++;
+                        } else {
+                            number100[i][j] = " " + count++ + " ";
+                        }
+                    }
+                }
+                alphabet = number100;
+                isAllNumberSelected = true;
             }
         }
 
@@ -144,7 +175,13 @@ public class EnglishLetterActivity extends ActionBarActivity {
                         ImageView imageView = (ImageView)findViewById(R.id.imageView_grid);
 
                         try {
-                                String imgPath = "english_" + textView.getText().toString().toLowerCase().trim() + ".jpg";
+                            // If selected intent is Number and displaying more than 20 numbers then do not display image
+                            String imgPath = "";
+                            if(!isAllNumberSelected || (isAllNumberSelected && Integer.parseInt(textView.getText().toString()) <= 20)) {
+                                imgPath = "english_" + textView.getText().toString().toLowerCase().trim() + ".jpg";
+                            } else {
+                                imgPath = "english_100.jpg";
+                            }
                                 InputStream si1 = getAssets().open(imgPath);
                                 Bitmap image = BitmapFactory.decodeStream(si1);
                                 Bitmap scaledImage = Bitmap.createScaledBitmap(image, imageView.getWidth(), (int)(imageView.getHeight()*.7), true);
@@ -181,7 +218,11 @@ public class EnglishLetterActivity extends ActionBarActivity {
                                 test2Speech.setSpeechRate(0.6f);
                                 test2Speech.speak(text2Speech, TextToSpeech.QUEUE_FLUSH, null);
                             } else {
-                                Toast.makeText(getApplicationContext(), text2Speech.substring(5).toUpperCase(), Toast.LENGTH_LONG).show();
+                                if(numberIntentSelected == Constants.ENGLISH_NUMBER_VALUE) {
+                                    Toast.makeText(getApplicationContext(), text2Speech, Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), text2Speech.substring(5).toUpperCase(), Toast.LENGTH_LONG).show();
+                                }
                             }
 
                             // Play sound
@@ -205,13 +246,17 @@ public class EnglishLetterActivity extends ActionBarActivity {
                                 }
                             });
                         } catch(Exception e) {
-                            if(textView.getText() != null && !"".equals(textView.getText().toString().trim())) {
-                                Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.english_f);
-                                VideoView videoview = (VideoView) findViewById(R.id.videoView_grid);
-                                videoview.setVideoURI(uri);
-                                videoview.setVisibility(View.VISIBLE);
-                                videoview.start();
-                            }
+                            try {
+                                if (textView.getText() != null && !"".equals(textView.getText().toString().trim()) &&
+                                        Integer.parseInt(textView.getText().toString()) < Constants.SELECTED_NUM_VALUE_20) {
+                                    Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.english_f);
+                                    VideoView videoview = (VideoView) findViewById(R.id.videoView_grid);
+                                    videoview.setVideoURI(uri);
+                                    videoview.setVisibility(View.VISIBLE);
+                                    videoview.start();
+                                }
+                            } catch (NumberFormatException nfe) {}
+                            catch(Exception e1){}
                         }
                         videoview.setOnClickListener(new View.OnClickListener() {
                             @Override

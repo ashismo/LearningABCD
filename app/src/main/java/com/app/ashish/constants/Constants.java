@@ -6,7 +6,7 @@ package com.app.ashish.constants;
 public class Constants {
     public static final String SELECTED_INTENT="selectedIntent";
     public static final String SOUND_ENABLE_KEY="isSoundEnable";
-    public static final String SELECTED_NUMBER_KEY="isSoundEnable";
+    public static final String SELECTED_NUMBER_KEY="selectedNumberLimit";
 
     public static int ENGLISH_CAPS_VALUE=1;
     public static int ENGLISH_SMALL_VALUE=2;

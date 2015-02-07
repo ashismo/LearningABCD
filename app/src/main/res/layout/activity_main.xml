@@ -44,8 +44,8 @@
         android:id="@+id/isSoundEnable"
         android:checked="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignLeft="@+id/radio_number_grp"
+        android:layout_alignStart="@+id/radio_number_grp" />
 
     <RadioButton
         android:layout_width="wrap_content"
@@ -69,14 +69,11 @@
         android:visibility="invisible"/>
 
     <RadioGroup
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/isSoundEnable"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_toRightOf="@+id/isSoundEnable"
-        android:layout_toEndOf="@+id/isSoundEnable"
-        android:id="@+id/radio_number_grp">
+        android:id="@+id/radio_number_grp"
+        android:layout_below="@+id/radio_eng_number"
+        android:layout_centerHorizontal="true">
 
         <RadioButton
             android:layout_width="wrap_content"

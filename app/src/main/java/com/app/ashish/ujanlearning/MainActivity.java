@@ -29,6 +29,7 @@ import java.util.Random;
 public class MainActivity extends ActionBarActivity {
     private CheckBox soundEnabledCkBox = null;
     private boolean isSoundEnabled = true;
+    private int selectedNumber = 10;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,11 +69,8 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), EnglishLetterActivity.class);
                 intent.putExtra(Constants.SELECTED_INTENT, Constants.ENGLISH_NUMBER_VALUE);
-                if(intent.getExtras().getInt(Constants.SELECTED_NUMBER_KEY) == 0)  {
-                    intent.putExtra(Constants.SELECTED_NUMBER_KEY, Constants.SELECTED_NUM_VALUE_10);
-                } else {
-                    intent.putExtra(Constants.SELECTED_NUMBER_KEY, Constants.SELECTED_NUM_VALUE_20);
-                }
+                onNumberLimitClicked(v);
+                intent.putExtra(Constants.SELECTED_NUMBER_KEY, selectedNumber);
                 contrlSound(intent);
                 startActivity(intent);
 
@@ -88,24 +86,19 @@ public class MainActivity extends ActionBarActivity {
         switch(view.getId()) {
             case R.id.radio_num_10:
                 if (checked) {
-                    Intent intent = new Intent(getApplicationContext(), EnglishLetterActivity.class);
-                    intent.putExtra(Constants.SELECTED_NUMBER_KEY, Constants.SELECTED_NUM_VALUE_10);
+                    selectedNumber = Constants.SELECTED_NUM_VALUE_10;
                 }
                 break;
             case R.id.radio_num_20:
                 if (checked) {
                     if (checked) {
-                        Intent intent = new Intent(getApplicationContext(), EnglishLetterActivity.class);
-                        intent.putExtra(Constants.SELECTED_NUMBER_KEY, Constants.SELECTED_NUM_VALUE_20);
+                        selectedNumber = Constants.SELECTED_NUM_VALUE_20;
                     }
                 }
                 break;
             case R.id.radio_num_100:
                 if (checked) {
-                    if (checked) {
-                        Intent intent = new Intent(getApplicationContext(), EnglishLetterActivity.class);
-                        intent.putExtra(Constants.SELECTED_NUMBER_KEY, Constants.SELECTED_NUM_VALUE_100);
-                    }
+                    selectedNumber = Constants.SELECTED_NUM_VALUE_100;
                 }
                 break;
         }

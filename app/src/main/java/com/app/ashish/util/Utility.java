@@ -1,5 +1,7 @@
 package com.app.ashish.util;
 
+import com.app.ashish.constants.Constants;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,6 +48,20 @@ public class Utility {
         alphabetMap.put("8", "Eight Mangoes");
         alphabetMap.put("9", "Nine Cats");
         alphabetMap.put("10", "Ten Babies");
+        alphabetMap.put("11", "Eleven Fishes");
+        alphabetMap.put("12", "Twelves Biscuits");
+        alphabetMap.put("13", "Thirteen Dogs");
+        alphabetMap.put("14", "Fourteen Horses");
+        alphabetMap.put("15", "Fifteen Red Balls");
+        alphabetMap.put("16", "Sixteen Mangoes");
+        alphabetMap.put("17", "Seventeen Biscuits");
+        alphabetMap.put("18", "Eighteen Balls");
+        alphabetMap.put("19", "Nineteen Balls");
+        alphabetMap.put("20", "Twenty Balls");
+
+        for(int i = 21; i <= Constants.SELECTED_NUM_VALUE_100; i++) {
+            alphabetMap.put("" + i, "" + i);
+        }
 
     }
     public static String getTextByAlphabet(String alphabet) {

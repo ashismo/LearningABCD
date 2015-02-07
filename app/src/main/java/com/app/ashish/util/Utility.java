@@ -35,12 +35,24 @@ public class Utility {
         alphabetMap.put("X", "X for X-Mas tree");
         alphabetMap.put("Y", "Y for Yolk");
         alphabetMap.put("Z", "Z for Zebra");
+
+        alphabetMap.put("1", "One Shoe");
+        alphabetMap.put("2", "Two Balloons");
+        alphabetMap.put("3", "Three Biscuits");
+        alphabetMap.put("4", "Four Fishes");
+        alphabetMap.put("5", "Five Balls");
+        alphabetMap.put("6", "Six Dogs");
+        alphabetMap.put("7", "Seven Oranges");
+        alphabetMap.put("8", "Eight Mangoes");
+        alphabetMap.put("9", "Nine Cats");
+        alphabetMap.put("10", "Ten Babies");
+
     }
     public static String getTextByAlphabet(String alphabet) {
         String text = "";
         if(alphabet != null) {
             initAlphabetMap();
-            text = alphabetMap.get(alphabet.toUpperCase());
+            text = alphabetMap.get(alphabet.toUpperCase().trim());
             if(text == null) {
                 text = "";
             }

@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -27,7 +26,7 @@ import java.util.Locale;
 import java.util.Random;
 
 
-public class EnglishLetterActivity extends ActionBarActivity {
+public class BengaliLetterActivity extends ActionBarActivity {
     TextToSpeech test2Speech = null;
     //Add animation to the image
     Animation mAnimationTopLeft = null;
@@ -57,10 +56,9 @@ public class EnglishLetterActivity extends ActionBarActivity {
         setContentView(R.layout.activity_english);
 
 
-        int selectedIntent = getIntent().getExtras().getInt(Constants.SELECTED_INTENT);
-        int selectedNumberLimit = getIntent().getExtras().getInt(Constants.SELECTED_NUMBER_KEY);
+        int selectedOption = getIntent().getExtras().getInt(Constants.SELECTED_INTENT);
         Constants.SOUND_ENABLE_VALUE isSoundEnable = (Constants.SOUND_ENABLE_VALUE)getIntent().getExtras().get(Constants.SOUND_ENABLE_KEY);
-        englishLetters(selectedIntent, selectedNumberLimit);
+        englishLetters(selectedOption);
 
         Utility.initAlphabetMap();
 
@@ -79,28 +77,21 @@ public class EnglishLetterActivity extends ActionBarActivity {
     }
 
 
-    private void englishLetters(int selectedIntent, int selectedNumberLimit) {
+    private void englishLetters(int selectedOption) {
         String alphabet[][] = null;
 
-        if(selectedIntent == Constants.ENGLISH_CAPS_VALUE) {
-            String alphabet1[][] = {{"A","B","C","D"}, {"E","F","G","H"},
-                    {"I","J","K","L"}, {"M","N","O","P"},
-                    {"Q","R","S","T"}, {"U","V","W","X"},
-                    {"","Y","Z",""}};
-            alphabet = alphabet1;
-        } else if(selectedIntent == Constants.ENGLISH_SMALL_VALUE) {
+        if(selectedOption == Constants.ENGLISH_SMALL_VALUE) {
             String alphabet2[][] = {{"a","b","c","d"}, {"e","f","g","h"},
                 {"i","j","k","l"}, {"m","n","o","p"},
                 {"q","r","s","t"}, {"u","v","w","x"},
                 {"","y","z",""}};
             alphabet = alphabet2;
-        } else if(selectedIntent == Constants.ENGLISH_NUMBER_VALUE) {
-            if(selectedNumberLimit == Constants.SELECTED_NUM_VALUE_10 || selectedNumberLimit == 0) {
-                String number10[][] = {{"", " 1 ", "", " 2 ", ""}, {" 3 ", "", " 4 ", "", " 5 "},
-                        {"6", "", "7", "", "8"}, {"", "9", "", "10", ""},
-                };
-                alphabet = number10;
-            }
+        } else if(selectedOption == Constants.ENGLISH_CAPS_VALUE) {
+            String alphabet1[][] = {{"A","B","C","D"}, {"E","F","G","H"},
+                    {"I","J","K","L"}, {"M","N","O","P"},
+                    {"Q","R","S","T"}, {"U","V","W","X"},
+                    {"","Y","Z",""}};
+            alphabet = alphabet1;
         }
 
         TableLayout tableLayout = (TableLayout)findViewById(R.id.alphabet);
@@ -144,7 +135,7 @@ public class EnglishLetterActivity extends ActionBarActivity {
                         ImageView imageView = (ImageView)findViewById(R.id.imageView_grid);
 
                         try {
-                                String imgPath = "english_" + textView.getText().toString().toLowerCase().trim() + ".jpg";
+                                String imgPath = "english_" + textView.getText().toString().toLowerCase() + ".jpg";
                                 InputStream si1 = getAssets().open(imgPath);
                                 Bitmap image = BitmapFactory.decodeStream(si1);
                                 Bitmap scaledImage = Bitmap.createScaledBitmap(image, imageView.getWidth(), (int)(imageView.getHeight()*.7), true);

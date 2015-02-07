@@ -42,12 +42,7 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), EnglishLetterActivity.class);
                 intent.putExtra(Constants.SELECTED_INTENT, Constants.ENGLISH_CAPS_VALUE);
-                addListenerOnSoundEnableCkBox();
-                if(isSoundEnabled) {
-                    intent.putExtra(Constants.SOUND_ENABLE_KEY, Constants.SOUND_ENABLE_VALUE.Y);
-                } else {
-                    intent.putExtra(Constants.SOUND_ENABLE_KEY, Constants.SOUND_ENABLE_VALUE.N);
-                }
+                contrlSound(intent);
                 startActivity(intent);
 
             }
@@ -60,16 +55,68 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), EnglishLetterActivity.class);
                 intent.putExtra(Constants.SELECTED_INTENT, Constants.ENGLISH_SMALL_VALUE);
-                addListenerOnSoundEnableCkBox();
-                if(isSoundEnabled) {
-                    intent.putExtra(Constants.SOUND_ENABLE_KEY, Constants.SOUND_ENABLE_VALUE.Y);
-                } else {
-                    intent.putExtra(Constants.SOUND_ENABLE_KEY, Constants.SOUND_ENABLE_VALUE.N);
-                }
+                contrlSound(intent);
                 startActivity(intent);
 
             }
         });
+
+        // English number
+        RadioButton engNumber = (RadioButton)findViewById(R.id.radio_eng_number);
+        engNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), EnglishLetterActivity.class);
+                intent.putExtra(Constants.SELECTED_INTENT, Constants.ENGLISH_NUMBER_VALUE);
+                if(intent.getExtras().getInt(Constants.SELECTED_NUMBER_KEY) == 0)  {
+                    intent.putExtra(Constants.SELECTED_NUMBER_KEY, Constants.SELECTED_NUM_VALUE_10);
+                } else {
+                    intent.putExtra(Constants.SELECTED_NUMBER_KEY, Constants.SELECTED_NUM_VALUE_20);
+                }
+                contrlSound(intent);
+                startActivity(intent);
+
+            }
+        });
+    }
+
+    public void onNumberLimitClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.radio_num_10:
+                if (checked) {
+                    Intent intent = new Intent(getApplicationContext(), EnglishLetterActivity.class);
+                    intent.putExtra(Constants.SELECTED_NUMBER_KEY, Constants.SELECTED_NUM_VALUE_10);
+                }
+                break;
+            case R.id.radio_num_20:
+                if (checked) {
+                    if (checked) {
+                        Intent intent = new Intent(getApplicationContext(), EnglishLetterActivity.class);
+                        intent.putExtra(Constants.SELECTED_NUMBER_KEY, Constants.SELECTED_NUM_VALUE_20);
+                    }
+                }
+                break;
+            case R.id.radio_num_100:
+                if (checked) {
+                    if (checked) {
+                        Intent intent = new Intent(getApplicationContext(), EnglishLetterActivity.class);
+                        intent.putExtra(Constants.SELECTED_NUMBER_KEY, Constants.SELECTED_NUM_VALUE_100);
+                    }
+                }
+                break;
+        }
+    }
+    private void contrlSound(Intent intent) {
+        addListenerOnSoundEnableCkBox();
+        if(isSoundEnabled) {
+            intent.putExtra(Constants.SOUND_ENABLE_KEY, Constants.SOUND_ENABLE_VALUE.Y);
+        } else {
+            intent.putExtra(Constants.SOUND_ENABLE_KEY, Constants.SOUND_ENABLE_VALUE.N);
+        }
     }
 
 

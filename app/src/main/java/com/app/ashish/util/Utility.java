@@ -57,7 +57,7 @@ public class Utility {
         alphabetMap.put("17", "Seventeen Biscuits");
         alphabetMap.put("18", "Eighteen Balls");
         alphabetMap.put("19", "Nineteen Balls");
-        alphabetMap.put("20", "Twenty Balls");
+        alphabetMap.put("20", "Twenty Red Balls");
 
         for(int i = 21; i <= Constants.SELECTED_NUM_VALUE_100; i++) {
             alphabetMap.put("" + i, "" + i);

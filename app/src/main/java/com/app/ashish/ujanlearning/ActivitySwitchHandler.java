@@ -17,13 +17,13 @@ public class ActivitySwitchHandler extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_english);
 
-        int selectedOption = getIntent().getExtras().getInt(Constants.SELECTED_INTENT);
-
-        if(selectedOption == Constants.ENGLISH_CAPS_VALUE || selectedOption == Constants.ENGLISH_SMALL_VALUE) {
-            Intent intent = new Intent(getApplicationContext(), EnglishLetterActivity.class);
-            intent.putExtra(Constants.SELECTED_INTENT, selectedOption);
-            startActivity(intent);
-        }
+//        int selectedOption = getIntent().getExtras().getInt(Constants.SELECTED_INTENT);
+//
+//        if(selectedOption == Constants.ENGLISH_CAPS_VALUE || selectedOption == Constants.ENGLISH_SMALL_VALUE) {
+//            Intent intent = new Intent(getApplicationContext(), EnglishLetterActivity.class);
+//            intent.putExtra(Constants.SELECTED_INTENT, selectedOption);
+//            startActivity(intent);
+//        }
     }
 
 
@@ -42,9 +42,9 @@ public class ActivitySwitchHandler extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }

@@ -29,10 +29,10 @@ public class Utility {
         alphabetMap.put("P", "P for Pigeon");
         alphabetMap.put("Q", "Q for Queen");
         alphabetMap.put("R", "R for Rose");
-        alphabetMap.put("S", "S for Squirrel");
+        alphabetMap.put("S", "S for Ship");
         alphabetMap.put("T", "T for Tiger");
         alphabetMap.put("U", "U for Umbrella");
-        alphabetMap.put("V", "V for Violin");
+        alphabetMap.put("V", "V for Vegetables");
         alphabetMap.put("W", "W for Watch");
         alphabetMap.put("X", "X for X-Mas tree");
         alphabetMap.put("Y", "Y for Yolk");

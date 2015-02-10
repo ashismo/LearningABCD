@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.internal.app.ToolbarActionBar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +20,7 @@ import android.widget.RadioButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.ashish.constants.Constants;
 
@@ -128,11 +130,23 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+
+        switch (item.getItemId()) {
+            case R.id.action_about:
+                Toast.makeText(getApplicationContext(),R.string.version, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), R.string.developed_by, Toast.LENGTH_LONG).show();
+                return true;
+//            case R.id.action_settings:
+//
+//                return true;
+            default:
+                return super.onContextItemSelected(item);
         }
 
-        return super.onOptionsItemSelected(item);
+//        return super.onOptionsItemSelected(item);
     }
 
     public void addListenerOnSoundEnableCkBox() {

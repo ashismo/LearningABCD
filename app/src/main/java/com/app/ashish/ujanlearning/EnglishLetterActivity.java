@@ -52,7 +52,7 @@ public class EnglishLetterActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Set the navigation up to the main page
         // Add animation to the english page
 //        RelativeLayout englishAlphabetLayout = (RelativeLayout) findViewById(R.id.english_relative_layout);
 //        englishAlphabetLayout.setAnimation(mAnimationBottomRight);
@@ -90,12 +90,14 @@ public class EnglishLetterActivity extends ActionBarActivity {
                     {"Q","R","S","T"}, {"U","V","W","X"},
                     {"","Y","Z",""}};
             alphabet = alphabet1;
+            setTitle(R.string.english_caps);
         } else if(selectedIntent == Constants.ENGLISH_SMALL_VALUE) {
             String alphabet2[][] = {{"a","b","c","d"}, {"e","f","g","h"},
                 {"i","j","k","l"}, {"m","n","o","p"},
                 {"q","r","s","t"}, {"u","v","w","x"},
                 {"","y","z",""}};
             alphabet = alphabet2;
+            setTitle(R.string.english_small);
         } else if(selectedIntent == Constants.ENGLISH_NUMBER_VALUE) {
             if(selectedNumberLimit == Constants.SELECTED_NUM_VALUE_10 || selectedNumberLimit == 0) {
 //                String number10[][] = {{"", " 1 ", "", " 2 ", ""}, {" 3 ", "", " 4 ", "", " 5 "},
@@ -132,12 +134,15 @@ public class EnglishLetterActivity extends ActionBarActivity {
                 alphabet = number100;
                 isAllNumberSelected = true;
             }
+            setTitle(R.string.english_number + "(upto " + selectedNumberLimit + ")");
         }
 
         TableLayout tableLayout = (TableLayout)findViewById(R.id.alphabet);
         // Hide the top text view
         final TextView alphabetText = (TextView) findViewById(R.id.imageView_text);
+        final TextView alphabetTextDesc = (TextView) findViewById(R.id.imageView_text_desc);
         alphabetText.setVisibility(View.INVISIBLE);
+        alphabetTextDesc.setVisibility(View.INVISIBLE);
         // Hide image view
         ImageView imageView = (ImageView)findViewById(R.id.imageView_grid);
         imageView.setVisibility(View.INVISIBLE);
@@ -190,11 +195,12 @@ public class EnglishLetterActivity extends ActionBarActivity {
                             // Set the alphabets at the top
 //                            String alphabet2Text = Utility.getTextByAlphabet(textView.getText().toString());
                             alphabetText.setText(textView.getText());
-                            alphabetText.setTextSize(100);
+                            alphabetText.setTextSize(80);
                             alphabetText.setBackgroundColor(Color.WHITE);
                             alphabetText.setTextColor(Color.RED);
                             alphabetText.setGravity(Gravity.CENTER);
                             alphabetText.setVisibility(View.VISIBLE);
+
                             imageView.setVisibility(View.VISIBLE);
 
                             //Add animation to the image
@@ -217,13 +223,27 @@ public class EnglishLetterActivity extends ActionBarActivity {
                             if(test2Speech != null) {
                                 test2Speech.setSpeechRate(0.6f);
                                 test2Speech.speak(text2Speech, TextToSpeech.QUEUE_FLUSH, null);
-                            } else {
+                            }
+                            /*else {
                                 if(numberIntentSelected == Constants.ENGLISH_NUMBER_VALUE) {
                                     Toast.makeText(getApplicationContext(), text2Speech, Toast.LENGTH_LONG).show();
                                 } else {
                                     Toast.makeText(getApplicationContext(), text2Speech.substring(5).toUpperCase(), Toast.LENGTH_LONG).show();
                                 }
+                            }*/
+
+                            if(numberIntentSelected == Constants.ENGLISH_NUMBER_VALUE) {
+                                // Set description
+                                alphabetTextDesc.setText(Utility.getTextByAlphabet(textView.getText().toString()));
+                            } else {
+                                // Set description
+                                alphabetTextDesc.setText(textView.getText().toString().substring(5));
                             }
+                            alphabetTextDesc.setTextSize(50);
+                            alphabetTextDesc.setBackgroundColor(Color.WHITE);
+                            alphabetTextDesc.setTextColor(Color.BLUE);
+                            alphabetTextDesc.setGravity(Gravity.CENTER);
+                            alphabetTextDesc.setVisibility(View.VISIBLE);
 
                             // Play sound
 //                            audioPath = "english_" + textView.getText().toString().toLowerCase() + ".mp3";
@@ -234,7 +254,7 @@ public class EnglishLetterActivity extends ActionBarActivity {
                                 @Override
                                 public void onClick(View v) {
                                     // If text to speech conversion is stooped then close the image
-                                    closeImageAndText(alphabetText);
+                                    closeImageAndText(alphabetText, alphabetTextDesc);
                                 }
                             });
 
@@ -242,7 +262,14 @@ public class EnglishLetterActivity extends ActionBarActivity {
                                 @Override
                                 public void onClick(View v) {
                                     // If text to speech conversion is stooped then close the image
-                                    closeImageAndText(alphabetText);
+                                    closeImageAndText(alphabetText, alphabetTextDesc);
+                                }
+                            });
+                            alphabetTextDesc.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    // If text to speech conversion is stooped then close the image
+                                    closeImageAndText(alphabetText, alphabetTextDesc);
                                 }
                             });
                         } catch(Exception e) {
@@ -275,11 +302,12 @@ public class EnglishLetterActivity extends ActionBarActivity {
         }
     }
 
-    private void closeImageAndText(TextView alphabetText) {
+    private void closeImageAndText(TextView alphabetText, TextView alphabetTextDesc) {
         if (test2Speech == null || !test2Speech.isSpeaking()) {
             ImageView imageView = (ImageView) findViewById(R.id.imageView_grid);
             imageView.setVisibility(View.INVISIBLE);
             alphabetText.setVisibility(View.INVISIBLE);
+            alphabetTextDesc.setVisibility(View.INVISIBLE);
         }
     }
 

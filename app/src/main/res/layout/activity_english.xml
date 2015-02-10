@@ -42,6 +42,17 @@
         android:transitionName="@android:string/ok"
         android:src="#ff97ffee"
         android:visibility="invisible" />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageView_text"
+        android:layout_alignRight="@+id/imageView_text"
+        android:layout_alignBottom="@+id/imageView_text"
+        android:id="@+id/imageView_text_desc"
+        android:translationZ="@android:dimen/app_icon_size"
+        android:transitionName="@android:string/ok"
+        android:src="#ff97ffee"
+        android:visibility="invisible" />
 
     <ImageView
         android:layout_width="fill_parent"

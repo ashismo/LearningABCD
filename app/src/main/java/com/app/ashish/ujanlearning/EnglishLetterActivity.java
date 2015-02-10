@@ -177,7 +177,7 @@ public class EnglishLetterActivity extends ActionBarActivity {
                         try {
                             // If selected intent is Number and displaying more than 20 numbers then do not display image
                             String imgPath = "";
-                            if(!isAllNumberSelected || (isAllNumberSelected && Integer.parseInt(textView.getText().toString()) <= 20)) {
+                            if(!isAllNumberSelected || (isAllNumberSelected && Integer.parseInt(textView.getText().toString().trim()) <= 20)) {
                                 imgPath = "english_" + textView.getText().toString().toLowerCase().trim() + ".jpg";
                             } else {
                                 imgPath = "english_100.jpg";

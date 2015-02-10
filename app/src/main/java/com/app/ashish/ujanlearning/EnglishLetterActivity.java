@@ -134,7 +134,7 @@ public class EnglishLetterActivity extends ActionBarActivity {
                 alphabet = number100;
                 isAllNumberSelected = true;
             }
-            setTitle(R.string.english_number + "(upto " + selectedNumberLimit + ")");
+            setTitle(R.string.english_number);
         }
 
         TableLayout tableLayout = (TableLayout)findViewById(R.id.alphabet);

@@ -21,7 +21,7 @@ public class SettingActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settngs);
         final DatabaseUtil dbUtil = new DatabaseUtil(getApplicationContext());
-        
+
         // On selection of edit mode database to be updated
         Switch editModeSwitch = (Switch)findViewById(R.id.edit_mode_switch);
 

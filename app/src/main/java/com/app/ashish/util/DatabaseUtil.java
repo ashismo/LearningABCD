@@ -44,12 +44,17 @@ public class DatabaseUtil {
             SQLiteDatabase userSettingsDB = context.openOrCreateDatabase("APP_SETTINGS", Context.MODE_PRIVATE, null);
 
             // Check if val exists for the given param
-            Cursor resultSet = userSettingsDB.rawQuery("Select * from USER_SETTINGS where " +
-                    "SETTING_PARAM='"+ settingsParam +"'", null);
-            if(resultSet != null && resultSet.getCount() > 0) {
-                resultSet.moveToFirst();
-                String val = resultSet.getString(1);
-                return val;
+            try {
+                Cursor resultSet = userSettingsDB.rawQuery("Select * from USER_SETTINGS where " +
+                        "SETTING_PARAM='" + settingsParam + "'", null);
+                if (resultSet != null && resultSet.getCount() > 0) {
+                    resultSet.moveToFirst();
+                    String val = resultSet.getString(1);
+                    return val;
+                }
+            } catch (Exception e) {
+                // Exception occurs if table not present. Below method call creates table for the first time
+                updateUserSettings(settingsParam, "false");
             }
         }
         return null;

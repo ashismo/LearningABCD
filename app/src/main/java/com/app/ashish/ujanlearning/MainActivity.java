@@ -41,8 +41,7 @@ public class MainActivity extends ActionBarActivity {
 
         // Create private database which will be used to store user settings
         DatabaseUtil dbUtil = new DatabaseUtil(getApplicationContext());
-        dbUtil.updateUserSettings("EDIT_MODE","on");
-        String editMode = dbUtil.getUserSettingsByParam("EDIT_MODE");
+        String editMode = dbUtil.getUserSettingsByParam(Constants.EDIT_MODE_COL);
         Toast.makeText(getApplicationContext(), "editMode " + editMode, Toast.LENGTH_LONG).show();
 
         addListenerOnSoundEnableCkBox();

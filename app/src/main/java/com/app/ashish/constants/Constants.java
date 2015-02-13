@@ -20,4 +20,5 @@ public class Constants {
         N
     } ;
 
+    public static final String EDIT_MODE_COL="EDIT_MODE";
 }

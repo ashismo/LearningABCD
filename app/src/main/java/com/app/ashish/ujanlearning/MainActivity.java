@@ -23,6 +23,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.ashish.constants.Constants;
+import com.app.ashish.settings.SettingActivity;
+import com.app.ashish.util.DatabaseUtil;
 
 import java.io.InputStream;
 import java.util.Random;
@@ -36,6 +38,12 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Create private database which will be used to store user settings
+        DatabaseUtil dbUtil = new DatabaseUtil(getApplicationContext());
+        dbUtil.updateUserSettings("EDIT_MODE","on");
+        String editMode = dbUtil.getUserSettingsByParam("EDIT_MODE");
+        Toast.makeText(getApplicationContext(), "editMode " + editMode, Toast.LENGTH_LONG).show();
 
         addListenerOnSoundEnableCkBox();
         // Capital Letter
@@ -139,9 +147,10 @@ public class MainActivity extends ActionBarActivity {
                 Toast.makeText(getApplicationContext(),R.string.version, Toast.LENGTH_LONG).show();
                 Toast.makeText(getApplicationContext(), R.string.developed_by, Toast.LENGTH_LONG).show();
                 return true;
-//            case R.id.action_settings:
-//
-//                return true;
+            case R.id.user_settings:
+                Intent userSettings=new Intent(getApplicationContext(),SettingActivity.class);
+                startActivity(userSettings);
+                return true;
             default:
                 return super.onContextItemSelected(item);
         }

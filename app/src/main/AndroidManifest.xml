@@ -29,5 +29,12 @@
             android:parentActivityName="com.app.ashish.ujanlearning.MainActivity"
             android:label="@string/user_settings">
         </activity>
+
+        <!-- This Settings Activity is another child of main activity -->
+        <activity
+            android:name="com.app.ashish.ujanlearning.DialogActivity"
+            android:parentActivityName="com.app.ashish.ujanlearning.MainActivity"
+            >
+        </activity>
     </application>
 </manifest>

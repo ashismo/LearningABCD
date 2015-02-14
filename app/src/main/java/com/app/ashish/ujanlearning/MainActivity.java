@@ -39,11 +39,12 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void finish() {
+        super.finish();
         // Set edit mode to false while exiting from the app
         UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
         DatabaseUtil dbUtil = new DatabaseUtil(userSettings.getContext());
         dbUtil.updateUserSettings(Constants.EDIT_MODE_COL, "false");
-        super.finish();
+
     }
 
     @Override

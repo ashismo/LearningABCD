@@ -1,5 +1,7 @@
 package com.app.ashish.ujanlearning;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,10 +11,14 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -22,6 +28,7 @@ import android.widget.VideoView;
 
 import com.app.ashish.constants.Constants;
 import com.app.ashish.singleton.UserSettingsSingleton;
+import com.app.ashish.util.DatabaseUtil;
 import com.app.ashish.util.Utility;
 
 import java.io.File;
@@ -305,11 +312,9 @@ public class EnglishLetterActivity extends ActionBarActivity {
                                 }
                             });
                         } else {
-                            // Pick photo from gallery
-                            Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                            photoPickerIntent.setType("image/*");
-                            startActivityForResult(photoPickerIntent,NO_OF_SELECTED_IMAGE);
-                            UserSettingsSingleton.getUserSettings().setImageName("english_" + textView.getText().toString().toLowerCase().trim() + ".jpg");
+                            // Open a dialog
+                            openDialog(v);
+                            UserSettingsSingleton.getUserSettings().setSelectedText(textView.getText().toString());
                         }
                     }
                 });
@@ -330,6 +335,70 @@ public class EnglishLetterActivity extends ActionBarActivity {
     }
 
 
+    public void openDialog(View view){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage(R.string.dialog_desc);
+        // Get the layout inflater
+        LayoutInflater inflater =  (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        View mView = inflater.inflate(R.layout.activity_dialog_user_input, null);
+        alertDialogBuilder.setView(mView);
+
+        //Intent intent = new Intent(getApplicationContext(), DialogActivity.class);
+        //startActivity(intent);
+        alertDialogBuilder.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+//                        Intent positveActivity = new Intent(getApplicationContext(),com.example.alertdialog.PositiveActivity.class);
+//                        startActivity(positveActivity);
+                        try {
+                            UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
+
+                            // Compress and save image
+                            File file = new File(userSettings.getAppDirPath(), userSettings.getImageName());
+                            FileOutputStream fOut = new FileOutputStream(file);
+
+                            userSettings.getSelectedImageBM().compress(Bitmap.CompressFormat.JPEG, 20, fOut);
+                            fOut.flush();
+                            fOut.close();
+
+                            // Save description in database
+                            EditText imageDesc = (EditText)userSettings.getAlertDialog().findViewById(R.id.image_desc);
+                            DatabaseUtil dbUtil = new DatabaseUtil(userSettings.getContext());
+                            dbUtil.updateUserSettings(userSettings.getSelectedText().toUpperCase(), imageDesc.getText().toString());
+//                            Toast.makeText(getApplicationContext(), imageDesc.getText().toString(), Toast.LENGTH_LONG).show();
+                        } catch (Exception e) {}
+
+                    }
+                });
+        alertDialogBuilder.setNegativeButton("Cancel",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+//                        Intent negativeActivity = new Intent(getApplicationContext(),com.example.alertdialog.NegativeActivity.class);
+//                        startActivity(negativeActivity);
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+        UserSettingsSingleton.getUserSettings().setAlertDialog(alertDialog);
+        ImageButton imageButton = (ImageButton)alertDialog.findViewById(R.id.select_image);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Pick photo from gallery
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                photoPickerIntent.setType("image/*");
+                startActivityForResult(photoPickerIntent,NO_OF_SELECTED_IMAGE);
+                UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
+                userSettings.setImageName("english_" + userSettings.getSelectedText().toLowerCase().trim() + ".jpg");
+            }
+        });
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
@@ -342,12 +411,19 @@ public class EnglishLetterActivity extends ActionBarActivity {
                         Bitmap selectedImageBM = BitmapFactory.decodeStream(imageStream);
 
                         UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
-                        File file = new File(userSettings.getAppDirPath(), userSettings.getImageName());
-                        FileOutputStream fOut = new FileOutputStream(file);
-
-                        selectedImageBM.compress(Bitmap.CompressFormat.JPEG, 20, fOut);
-                        fOut.flush();
-                        fOut.close();
+                        userSettings.setSelectedImageBM(selectedImageBM);
+//                        // Compress and save image
+//                        File file = new File(userSettings.getAppDirPath(), userSettings.getImageName());
+//                        FileOutputStream fOut = new FileOutputStream(file);
+//
+//                        selectedImageBM.compress(Bitmap.CompressFormat.JPEG, 20, fOut);
+//                        fOut.flush();
+//                        fOut.close();
+                        ImageView imageView = (ImageView)userSettings.getAlertDialog().findViewById(R.id.selected_image);
+                        imageView.setImageBitmap(selectedImageBM);
+                        imageView.setVisibility(View.VISIBLE);
+                        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(300,300);
+                        imageView.setLayoutParams(parms);
                     }
             }
         } catch (Exception e) {

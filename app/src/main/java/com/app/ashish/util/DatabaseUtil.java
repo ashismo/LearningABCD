@@ -4,6 +4,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.HashMap;
+import java.util.Map;
+
 //import static android.database.sqlite.SQLiteDatabase.openOrCreateDatabase;
 
 /**
@@ -58,5 +61,29 @@ public class DatabaseUtil {
             }
         }
         return null;
+    }
+
+    public Map<String, String> getAllUserSettings() {
+        Map<String, String> userSettingsMap = new HashMap<>();
+            SQLiteDatabase userSettingsDB = context.openOrCreateDatabase("APP_SETTINGS", Context.MODE_PRIVATE, null);
+
+            // Check if val exists for the given param
+            try {
+                Cursor resultSet = userSettingsDB.rawQuery("Select * from USER_SETTINGS", null);
+                if (resultSet != null && resultSet.getCount() > 0) {
+                    resultSet.moveToFirst();
+                    int totalSettings = resultSet.getCount();
+                    for(int i = 0; i < totalSettings; i++) {
+                        String param = resultSet.getString(0);
+                        String val = resultSet.getString(1);
+                        resultSet.moveToNext();
+                        userSettingsMap.put(param, val);
+                    }
+                }
+            } catch (Exception e) {
+//                // Exception occurs if table not present. Below method call creates table for the first time
+//                updateUserSettings(settingsParam, "false");
+            }
+        return userSettingsMap;
     }
 }

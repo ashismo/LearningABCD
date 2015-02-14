@@ -74,6 +74,10 @@ public class Utility {
         String text = "";
         if(alphabet != null) {
             initAlphabetMap();
+            // Merge the initAlphabetMap with userSettings param value
+            UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
+            DatabaseUtil dbUtil = new DatabaseUtil(userSettings.getContext());
+            alphabetMap.putAll(dbUtil.getAllUserSettings());
             text = alphabetMap.get(alphabet.toUpperCase().trim());
             if(text == null) {
                 text = "";
@@ -90,17 +94,19 @@ public class Utility {
             editMode = "false";
         }
         userSettings.setEditMode(Boolean.valueOf(editMode));
-        if(userSettings.isEditMode()) {
-            // Create folder in the SD card
-            File dir = Environment.getExternalStorageDirectory();
 
-            // Create folder in the external storage device
-            String folderName = dir.getAbsolutePath() + "/" + Constants.APP_NAME;
+        // Create folder in the SD card
+        File dir = Environment.getExternalStorageDirectory();
+
+        // Create folder in the external storage device
+        String folderName = dir.getAbsolutePath() + "/" + Constants.APP_NAME;
+
+        if(userSettings.isEditMode()) {
             File appFolder = new File(folderName);
             if(!appFolder.exists() || !appFolder.isDirectory()) {
                 appFolder.mkdirs();
             }
-            userSettings.setAppDirPath(folderName);
         }
+        userSettings.setAppDirPath(folderName);
     }
 }

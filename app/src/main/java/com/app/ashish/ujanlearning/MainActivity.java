@@ -39,12 +39,11 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void finish() {
-        super.finish();
         // Set edit mode to false while exiting from the app
         UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
         DatabaseUtil dbUtil = new DatabaseUtil(userSettings.getContext());
         dbUtil.updateUserSettings(Constants.EDIT_MODE_COL, "false");
-
+        super.finish();
     }
 
     @Override
@@ -72,6 +71,7 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), EnglishLetterActivity.class);
                 intent.putExtra(Constants.SELECTED_INTENT, Constants.ENGLISH_CAPS_VALUE);
+                UserSettingsSingleton.getUserSettings().setSelectedLearningOption(Constants.ENGLISH_CAPS_VALUE);
                 contrlSound(intent);
                 startActivity(intent);
 
@@ -85,6 +85,7 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), EnglishLetterActivity.class);
                 intent.putExtra(Constants.SELECTED_INTENT, Constants.ENGLISH_SMALL_VALUE);
+                UserSettingsSingleton.getUserSettings().setSelectedLearningOption(Constants.ENGLISH_SMALL_VALUE);
                 contrlSound(intent);
                 startActivity(intent);
 
@@ -98,6 +99,7 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), EnglishLetterActivity.class);
                 intent.putExtra(Constants.SELECTED_INTENT, Constants.ENGLISH_NUMBER_VALUE);
+                UserSettingsSingleton.getUserSettings().setSelectedLearningOption(Constants.ENGLISH_NUMBER_VALUE);
                 onNumberLimitClicked(v);
                 intent.putExtra(Constants.SELECTED_NUMBER_KEY, selectedNumber);
                 contrlSound(intent);

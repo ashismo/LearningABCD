@@ -19,6 +19,7 @@ public class UserSettingsSingleton {
     private AlertDialog alertDialog;
     private Bitmap selectedImageBM;
     private String imageDesc;
+    private int selectedLearningOption;
 
     private UserSettingsSingleton(){}
     public static UserSettingsSingleton getUserSettings() {
@@ -98,5 +99,13 @@ public class UserSettingsSingleton {
 
     public void setImageDesc(String imageDesc) {
         this.imageDesc = imageDesc;
+    }
+
+    public int getSelectedLearningOption() {
+        return selectedLearningOption;
+    }
+
+    public void setSelectedLearningOption(int selectedLearningOption) {
+        this.selectedLearningOption = selectedLearningOption;
     }
 }

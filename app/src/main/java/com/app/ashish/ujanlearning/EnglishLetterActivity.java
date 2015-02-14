@@ -312,9 +312,17 @@ public class EnglishLetterActivity extends ActionBarActivity {
                                 }
                             });
                         } else {
+                            UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
+                            String selectedText = textView.getText().toString();
+                            // Do not allow change if number is more than 20
+                            if(userSettings.getSelectedLearningOption() == Constants.ENGLISH_NUMBER_VALUE) {
+                                if(Integer.valueOf(selectedText) > 20) {
+                                    return;
+                                }
+                            }
                             // Open a dialog
                             openDialog(v);
-                            UserSettingsSingleton.getUserSettings().setSelectedText(textView.getText().toString());
+                            userSettings.setSelectedText(selectedText);
                         }
                     }
                 });
@@ -343,15 +351,11 @@ public class EnglishLetterActivity extends ActionBarActivity {
         View mView = inflater.inflate(R.layout.activity_dialog_user_input, null);
         alertDialogBuilder.setView(mView);
 
-        //Intent intent = new Intent(getApplicationContext(), DialogActivity.class);
-        //startActivity(intent);
         alertDialogBuilder.setPositiveButton("OK",
                 new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
-//                        Intent positveActivity = new Intent(getApplicationContext(),com.example.alertdialog.PositiveActivity.class);
-//                        startActivity(positveActivity);
                         try {
                             UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
 
@@ -366,8 +370,13 @@ public class EnglishLetterActivity extends ActionBarActivity {
                             // Save description in database
                             EditText imageDesc = (EditText)userSettings.getAlertDialog().findViewById(R.id.image_desc);
                             DatabaseUtil dbUtil = new DatabaseUtil(userSettings.getContext());
-                            dbUtil.updateUserSettings(userSettings.getSelectedText().toUpperCase(), imageDesc.getText().toString());
-//                            Toast.makeText(getApplicationContext(), imageDesc.getText().toString(), Toast.LENGTH_LONG).show();
+                            String imageDescStr = imageDesc.getText().toString();
+                            String selectedText = userSettings.getSelectedText().toUpperCase();
+                            if(userSettings.getSelectedLearningOption() == Constants.ENGLISH_CAPS_VALUE ||
+                                    userSettings.getSelectedLearningOption() == Constants.ENGLISH_SMALL_VALUE) {
+                                imageDescStr = selectedText + " for " + imageDescStr;
+                            }
+                            dbUtil.updateUserSettings(selectedText, imageDescStr);
                         } catch (Exception e) {}
 
                     }

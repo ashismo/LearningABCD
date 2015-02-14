@@ -11,17 +11,17 @@ import android.database.sqlite.SQLiteDatabase;
  */
 public class DatabaseUtil {
     private Context context = null;
+    private SQLiteDatabase userSettingsDB;
     public DatabaseUtil(Context context) {
         this.context = context;
+        userSettingsDB = context.openOrCreateDatabase("APP_SETTINGS", Context.MODE_PRIVATE, null);
+        userSettingsDB.execSQL("CREATE TABLE IF NOT EXISTS USER_SETTINGS(\n" +
+                "\tSETTING_PARAM VARCHAR(50) NOT NULL,\n" +
+                "\tSETTING_VAL VARCHAR(50) NOT NULL,\n" +
+                "\tPRIMARY KEY (SETTING_PARAM))");
     }
     public void updateUserSettings(String settingsParam, String settingVal) {
         if(settingsParam != null && settingVal != null) {
-            SQLiteDatabase userSettingsDB = context.openOrCreateDatabase("APP_SETTINGS", Context.MODE_PRIVATE, null);
-            userSettingsDB.execSQL("CREATE TABLE IF NOT EXISTS USER_SETTINGS(\n" +
-                    "\tSETTING_PARAM VARCHAR(50) NOT NULL,\n" +
-                    "\tSETTING_VAL VARCHAR(50) NOT NULL,\n" +
-                    "\tPRIMARY KEY (SETTING_PARAM))");
-
             // Check if param-val already exists
             Cursor resultSet = userSettingsDB.rawQuery("Select * from USER_SETTINGS where " +
                     "SETTING_PARAM='"+ settingsParam +"'", null);
@@ -53,8 +53,8 @@ public class DatabaseUtil {
                     return val;
                 }
             } catch (Exception e) {
-                // Exception occurs if table not present. Below method call creates table for the first time
-                updateUserSettings(settingsParam, "false");
+//                // Exception occurs if table not present. Below method call creates table for the first time
+//                updateUserSettings(settingsParam, "false");
             }
         }
         return null;

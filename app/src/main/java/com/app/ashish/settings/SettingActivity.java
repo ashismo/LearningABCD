@@ -9,6 +9,7 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.app.ashish.constants.Constants;
+import com.app.ashish.singleton.UserSettingsSingleton;
 import com.app.ashish.ujanlearning.R;
 import com.app.ashish.util.DatabaseUtil;
 
@@ -38,6 +39,7 @@ public class SettingActivity extends ActionBarActivity {
             public void onClick(View v) {
                 boolean isChecked = ((Switch) v).isChecked();
                 dbUtil.updateUserSettings(Constants.EDIT_MODE_COL, String.valueOf(isChecked));
+                UserSettingsSingleton.getUserSettings().setEditMode(isChecked);
             }
         });
 

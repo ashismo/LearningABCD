@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.app.ashish.constants.Constants;
 import com.app.ashish.settings.SettingActivity;
+import com.app.ashish.singleton.UserSettingsSingleton;
 import com.app.ashish.util.DatabaseUtil;
 
 import java.io.InputStream;
@@ -38,11 +39,8 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // Create private database which will be used to store user settings
-        DatabaseUtil dbUtil = new DatabaseUtil(getApplicationContext());
-        String editMode = dbUtil.getUserSettingsByParam(Constants.EDIT_MODE_COL);
-        Toast.makeText(getApplicationContext(), "editMode " + editMode, Toast.LENGTH_LONG).show();
+        // Below line should not be moved from this place.
+        UserSettingsSingleton.getUserSettings().setContext(getApplicationContext());
 
         addListenerOnSoundEnableCkBox();
         // Capital Letter

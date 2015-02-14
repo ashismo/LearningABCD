@@ -1,6 +1,9 @@
 package com.app.ashish.util;
 
+import android.content.Context;
+
 import com.app.ashish.constants.Constants;
+import com.app.ashish.singleton.UserSettingsSingleton;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -74,5 +77,12 @@ public class Utility {
             }
         }
         return text;
+    }
+
+    private void readUserSettings() {
+        UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
+        DatabaseUtil dbUtil = new DatabaseUtil(userSettings.getContext());
+        String editMode = dbUtil.getUserSettingsByParam(Constants.EDIT_MODE_COL);
+        userSettings.setEditMode(Boolean.valueOf(editMode));
     }
 }

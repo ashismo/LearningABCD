@@ -110,6 +110,8 @@
         android:layout_below="@+id/isSoundEnable"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:background="#ffffcbec" />
+        android:textColor="#ffff3923"
+        android:textSize="15dp"
+        android:textIsSelectable="false" />
 
 </RelativeLayout>

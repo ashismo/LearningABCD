@@ -26,6 +26,7 @@ import com.app.ashish.constants.Constants;
 import com.app.ashish.settings.SettingActivity;
 import com.app.ashish.singleton.UserSettingsSingleton;
 import com.app.ashish.util.DatabaseUtil;
+import com.app.ashish.util.Utility;
 
 import java.io.InputStream;
 import java.util.Random;
@@ -40,8 +41,10 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // Below line should not be moved from this place.
-        UserSettingsSingleton.getUserSettings().setContext(getApplicationContext());
-
+        UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
+        userSettings.setContext(getApplicationContext());
+        userSettings.setNoOfTimeHomePageAccessed(userSettings.getNoOfTimeHomePageAccessed() + 1);
+        new Utility().readUserSettings();
         addListenerOnSoundEnableCkBox();
         // Capital Letter
         RadioButton engCapitalLetter = (RadioButton)findViewById(R.id.radio_eng_caps);

@@ -1,5 +1,6 @@
 package com.app.ashish.ujanlearning;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -20,8 +21,12 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.app.ashish.constants.Constants;
+import com.app.ashish.singleton.UserSettingsSingleton;
 import com.app.ashish.util.Utility;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.Locale;
 import java.util.Random;
@@ -36,6 +41,9 @@ public class EnglishLetterActivity extends ActionBarActivity {
     private Animation mAnimationBottomLeft = null;
     private final int numberIntentSelected = 3;
     private boolean isAllNumberSelected = false;
+    private boolean isEditMode = false;
+    private final int NO_OF_SELECTED_IMAGE = 1;
+
 
     @Override
     public void finish(){
@@ -53,11 +61,8 @@ public class EnglishLetterActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Set the navigation up to the main page
-        // Add animation to the english page
-//        RelativeLayout englishAlphabetLayout = (RelativeLayout) findViewById(R.id.english_relative_layout);
-//        englishAlphabetLayout.setAnimation(mAnimationBottomRight);
         setContentView(R.layout.activity_english);
-
+        isEditMode = UserSettingsSingleton.getUserSettings().isEditMode();
 
         int selectedIntent = getIntent().getExtras().getInt(Constants.SELECTED_INTENT);
         int selectedNumberLimit = getIntent().getExtras().getInt(Constants.SELECTED_NUMBER_KEY);
@@ -169,45 +174,50 @@ public class EnglishLetterActivity extends ActionBarActivity {
 
                 textView.setOnClickListener(new View.OnClickListener(){
                     @Override
-                    public void onClick(View v){
-
-                        // If video is open but not playing then close it
-                        if(!videoview.isPlaying() && (videoview.getVisibility() == View.VISIBLE)) {
-                            videoview.setVisibility(View.INVISIBLE);
-                            return;
-                        }
-                        String audioPath = "";
-                        ImageView imageView = (ImageView)findViewById(R.id.imageView_grid);
-
-                        try {
-                            // If selected intent is Number and displaying more than 20 numbers then do not display image
-                            String imgPath = "";
-                            if(!isAllNumberSelected || (isAllNumberSelected && Integer.parseInt(textView.getText().toString().trim()) <= 20)) {
-                                imgPath = "english_" + textView.getText().toString().toLowerCase().trim() + ".jpg";
-                            } else {
-                                imgPath = "english_100.jpg";
+                    public void onClick(View v) {
+                        if (!isEditMode) {
+                            // If video is open but not playing then close it
+                            if (!videoview.isPlaying() && (videoview.getVisibility() == View.VISIBLE)) {
+                                videoview.setVisibility(View.INVISIBLE);
+                                return;
                             }
+                            String audioPath = "";
+                            ImageView imageView = (ImageView) findViewById(R.id.imageView_grid);
+
+                            try {
+                                // If selected intent is Number and displaying more than 20 numbers then do not display image
+                                String imgPath = "";
+                                if (!isAllNumberSelected || (isAllNumberSelected && Integer.parseInt(textView.getText().toString().trim()) <= 20)) {
+                                    imgPath = "english_" + textView.getText().toString().toLowerCase().trim() + ".jpg";
+                                } else {
+                                    imgPath = "english_100.jpg";
+                                }
                                 InputStream si1 = getAssets().open(imgPath);
+                                String imagePathInExternalDir = UserSettingsSingleton.getUserSettings().getAppDirPath()  + "/" + imgPath;
+                                File file = new File(imagePathInExternalDir);
+                                if(file.exists()) {
+                                    si1 = new FileInputStream(file);
+                                }
                                 Bitmap image = BitmapFactory.decodeStream(si1);
-                                Bitmap scaledImage = Bitmap.createScaledBitmap(image, imageView.getWidth(), (int)(imageView.getHeight()*.7), true);
+                                Bitmap scaledImage = Bitmap.createScaledBitmap(image, imageView.getWidth(), (int) (imageView.getHeight() * .7), true);
                                 imageView.setImageBitmap(scaledImage);
 
-                            // Set the alphabets at the top
+                                // Set the alphabets at the top
 //                            String alphabet2Text = Utility.getTextByAlphabet(textView.getText().toString());
-                            alphabetText.setText(textView.getText());
-                            alphabetText.setTextSize(80);
-                            alphabetText.setBackgroundColor(Color.WHITE);
-                            alphabetText.setTextColor(Color.RED);
-                            alphabetText.setGravity(Gravity.CENTER);
-                            alphabetText.setVisibility(View.VISIBLE);
+                                alphabetText.setText(textView.getText());
+                                alphabetText.setTextSize(80);
+                                alphabetText.setBackgroundColor(Color.WHITE);
+                                alphabetText.setTextColor(Color.RED);
+                                alphabetText.setGravity(Gravity.CENTER);
+                                alphabetText.setVisibility(View.VISIBLE);
 
-                            imageView.setVisibility(View.VISIBLE);
+                                imageView.setVisibility(View.VISIBLE);
 
-                            //Add animation to the image
-                            mAnimationTopLeft = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.animation_top_left);
-                            mAnimationBottomRight = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.animation_bottom_right);
-                            mAnimationTopRight = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.animation_top_right);
-                            mAnimationBottomLeft = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.animation_bottom_left);
+                                //Add animation to the image
+                                mAnimationTopLeft = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.animation_top_left);
+                                mAnimationBottomRight = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.animation_bottom_right);
+                                mAnimationTopRight = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.animation_top_right);
+                                mAnimationBottomLeft = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.animation_bottom_left);
                                 Random r = new Random();
                                 int random = r.nextInt(80 - 65) + 65;
                                 if (random % 4 == 0) {
@@ -219,11 +229,11 @@ public class EnglishLetterActivity extends ActionBarActivity {
                                 } else if (random % 4 == 3) {
                                     imageView.startAnimation(mAnimationBottomRight);
                                 }
-                            String text2Speech = Utility.getTextByAlphabet(textView.getText().toString());
-                            if(test2Speech != null) {
-                                test2Speech.setSpeechRate(0.6f);
-                                test2Speech.speak(text2Speech, TextToSpeech.QUEUE_FLUSH, null);
-                            }
+                                String text2Speech = Utility.getTextByAlphabet(textView.getText().toString());
+                                if (test2Speech != null) {
+                                    test2Speech.setSpeechRate(0.6f);
+                                    test2Speech.speak(text2Speech, TextToSpeech.QUEUE_FLUSH, null);
+                                }
                             /*else {
                                 if(numberIntentSelected == Constants.ENGLISH_NUMBER_VALUE) {
                                     Toast.makeText(getApplicationContext(), text2Speech, Toast.LENGTH_LONG).show();
@@ -232,67 +242,75 @@ public class EnglishLetterActivity extends ActionBarActivity {
                                 }
                             }*/
 
-                            if(numberIntentSelected == Constants.ENGLISH_NUMBER_VALUE) {
-                                // Set description
-                                alphabetTextDesc.setText(Utility.getTextByAlphabet(textView.getText().toString()));
-                            } else {
-                                // Set description
-                                alphabetTextDesc.setText(textView.getText().toString().substring(5));
-                            }
-                            alphabetTextDesc.setTextSize(50);
-                            alphabetTextDesc.setBackgroundColor(Color.WHITE);
-                            alphabetTextDesc.setTextColor(Color.BLUE);
-                            alphabetTextDesc.setGravity(Gravity.CENTER);
-                            alphabetTextDesc.setVisibility(View.VISIBLE);
+                                if (numberIntentSelected == Constants.ENGLISH_NUMBER_VALUE) {
+                                    // Set description
+                                    alphabetTextDesc.setText(Utility.getTextByAlphabet(textView.getText().toString()));
+                                } else {
+                                    // Set description
+                                    alphabetTextDesc.setText(textView.getText().toString().substring(5));
+                                }
+                                alphabetTextDesc.setTextSize(50);
+                                alphabetTextDesc.setBackgroundColor(Color.WHITE);
+                                alphabetTextDesc.setTextColor(Color.BLUE);
+                                alphabetTextDesc.setGravity(Gravity.CENTER);
+                                alphabetTextDesc.setVisibility(View.VISIBLE);
 
-                            // Play sound
+                                // Play sound
 //                            audioPath = "english_" + textView.getText().toString().toLowerCase() + ".mp3";
 //                            Uri uri = Uri.parse(audioPath);
 //                            final MediaPlayer mp = MediaPlayer.create(getApplicationContext(), uri);
 //                            mp.start();
-                            imageView.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    // If text to speech conversion is stooped then close the image
-                                    closeImageAndText(alphabetText, alphabetTextDesc);
-                                }
-                            });
+                                imageView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        // If text to speech conversion is stooped then close the image
+                                        closeImageAndText(alphabetText, alphabetTextDesc);
+                                    }
+                                });
 
-                            alphabetText.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    // If text to speech conversion is stooped then close the image
-                                    closeImageAndText(alphabetText, alphabetTextDesc);
+                                alphabetText.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        // If text to speech conversion is stooped then close the image
+                                        closeImageAndText(alphabetText, alphabetTextDesc);
+                                    }
+                                });
+                                alphabetTextDesc.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        // If text to speech conversion is stooped then close the image
+                                        closeImageAndText(alphabetText, alphabetTextDesc);
+                                    }
+                                });
+                            } catch (Exception e) {
+                                try {
+                                    if (textView.getText() != null && !"".equals(textView.getText().toString().trim()) &&
+                                            Integer.parseInt(textView.getText().toString()) < Constants.SELECTED_NUM_VALUE_20) {
+                                        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.english_f);
+                                        VideoView videoview = (VideoView) findViewById(R.id.videoView_grid);
+                                        videoview.setVideoURI(uri);
+                                        videoview.setVisibility(View.VISIBLE);
+                                        videoview.start();
+                                    }
+                                } catch (NumberFormatException nfe) {
+                                } catch (Exception e1) {
                                 }
-                            });
-                            alphabetTextDesc.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    // If text to speech conversion is stooped then close the image
-                                    closeImageAndText(alphabetText, alphabetTextDesc);
-                                }
-                            });
-                        } catch(Exception e) {
-                            try {
-                                if (textView.getText() != null && !"".equals(textView.getText().toString().trim()) &&
-                                        Integer.parseInt(textView.getText().toString()) < Constants.SELECTED_NUM_VALUE_20) {
-                                    Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.english_f);
-                                    VideoView videoview = (VideoView) findViewById(R.id.videoView_grid);
-                                    videoview.setVideoURI(uri);
-                                    videoview.setVisibility(View.VISIBLE);
-                                    videoview.start();
-                                }
-                            } catch (NumberFormatException nfe) {}
-                            catch(Exception e1){}
-                        }
-                        videoview.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                VideoView videoview = (VideoView) findViewById(R.id.videoView_grid);
-                                videoview.pause();
-                                videoview.setVisibility(View.INVISIBLE);
                             }
-                        });
+                            videoview.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    VideoView videoview = (VideoView) findViewById(R.id.videoView_grid);
+                                    videoview.pause();
+                                    videoview.setVisibility(View.INVISIBLE);
+                                }
+                            });
+                        } else {
+                            // Pick photo from gallery
+                            Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                            photoPickerIntent.setType("image/*");
+                            startActivityForResult(photoPickerIntent,NO_OF_SELECTED_IMAGE);
+                            UserSettingsSingleton.getUserSettings().setImageName("english_" + textView.getText().toString().toLowerCase().trim() + ".jpg");
+                        }
                     }
                 });
 
@@ -312,4 +330,28 @@ public class EnglishLetterActivity extends ActionBarActivity {
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+        try {
+            switch (requestCode) {
+                case NO_OF_SELECTED_IMAGE:
+                    if (resultCode == RESULT_OK) {
+                        Uri selectedImage = imageReturnedIntent.getData();
+                        InputStream imageStream = getContentResolver().openInputStream(selectedImage);
+                        Bitmap selectedImageBM = BitmapFactory.decodeStream(imageStream);
+
+                        UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
+                        File file = new File(userSettings.getAppDirPath(), userSettings.getImageName());
+                        FileOutputStream fOut = new FileOutputStream(file);
+
+                        selectedImageBM.compress(Bitmap.CompressFormat.JPEG, 20, fOut);
+                        fOut.flush();
+                        fOut.close();
+                    }
+            }
+        } catch (Exception e) {
+
+        }
+    }
 }

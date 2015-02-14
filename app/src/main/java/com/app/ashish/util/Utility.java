@@ -1,10 +1,13 @@
 package com.app.ashish.util;
 
 import android.content.Context;
+import android.os.Environment;
+import android.widget.Toast;
 
 import com.app.ashish.constants.Constants;
 import com.app.ashish.singleton.UserSettingsSingleton;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -79,10 +82,25 @@ public class Utility {
         return text;
     }
 
-    private void readUserSettings() {
+    public void readUserSettings() {
         UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
         DatabaseUtil dbUtil = new DatabaseUtil(userSettings.getContext());
         String editMode = dbUtil.getUserSettingsByParam(Constants.EDIT_MODE_COL);
+        if(userSettings.getNoOfTimeHomePageAccessed() == 1) {
+            editMode = "false";
+        }
         userSettings.setEditMode(Boolean.valueOf(editMode));
+        if(userSettings.isEditMode()) {
+            // Create folder in the SD card
+            File dir = Environment.getExternalStorageDirectory();
+
+            // Create folder in the external storage device
+            String folderName = dir.getAbsolutePath() + "/" + Constants.APP_NAME;
+            File appFolder = new File(folderName);
+            if(!appFolder.exists() || !appFolder.isDirectory()) {
+                appFolder.mkdirs();
+            }
+            userSettings.setAppDirPath(folderName);
+        }
     }
 }

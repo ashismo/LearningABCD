@@ -4,6 +4,7 @@ package com.app.ashish.constants;
  * Created by ashis_000 on 2/6/2015.
  */
 public class Constants {
+    public static final String APP_NAME = "LearningABCD";
     public static final String SELECTED_INTENT="selectedIntent";
     public static final String SOUND_ENABLE_KEY="isSoundEnable";
     public static final String SELECTED_NUMBER_KEY="selectedNumberLimit";

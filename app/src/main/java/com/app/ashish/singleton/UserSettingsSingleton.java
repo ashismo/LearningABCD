@@ -10,6 +10,10 @@ public class UserSettingsSingleton {
     private static UserSettingsSingleton userSettings = null;
     private boolean isEditMode = false;
     private Context context;
+    private String appDirPath;
+    private String imageName;
+    private int noOfTimeHomePageAccessed = 0;
+
     private UserSettingsSingleton(){}
     public static UserSettingsSingleton getUserSettings() {
         if(userSettings == null) {
@@ -32,5 +36,29 @@ public class UserSettingsSingleton {
 
     public void setContext(Context context) {
         this.context = context;
+    }
+
+    public String getAppDirPath() {
+        return appDirPath;
+    }
+
+    public void setAppDirPath(String appDirPath) {
+        this.appDirPath = appDirPath;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public int getNoOfTimeHomePageAccessed() {
+        return noOfTimeHomePageAccessed;
+    }
+
+    public void setNoOfTimeHomePageAccessed(int noOfTimeHomePageAccessed) {
+        this.noOfTimeHomePageAccessed = noOfTimeHomePageAccessed;
     }
 }

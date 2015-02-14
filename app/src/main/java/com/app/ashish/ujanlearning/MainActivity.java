@@ -36,6 +36,16 @@ public class MainActivity extends ActionBarActivity {
     private CheckBox soundEnabledCkBox = null;
     private boolean isSoundEnabled = true;
     private int selectedNumber = 10;
+
+    @Override
+    public void finish() {
+        // Set edit mode to false while exiting from the app
+        UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
+        DatabaseUtil dbUtil = new DatabaseUtil(userSettings.getContext());
+        dbUtil.updateUserSettings(Constants.EDIT_MODE_COL, "false");
+        super.finish();
+    }
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +55,14 @@ public class MainActivity extends ActionBarActivity {
         userSettings.setContext(getApplicationContext());
         userSettings.setNoOfTimeHomePageAccessed(userSettings.getNoOfTimeHomePageAccessed() + 1);
         new Utility().readUserSettings();
+
+        TextView editModeUserMsg = (TextView) findViewById(R.id.edit_mode_msg);
+        if(userSettings.isEditMode()) {
+            editModeUserMsg.setVisibility(View.VISIBLE);
+            editModeUserMsg.setText(R.string.change_edit_mode_from_settings);
+        } else {
+            editModeUserMsg.setVisibility(View.INVISIBLE);
+        }
         addListenerOnSoundEnableCkBox();
         // Capital Letter
         RadioButton engCapitalLetter = (RadioButton)findViewById(R.id.radio_eng_caps);

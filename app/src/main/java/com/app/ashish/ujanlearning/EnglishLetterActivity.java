@@ -451,10 +451,10 @@ public class EnglishLetterActivity extends ActionBarActivity {
                     File file = new File(imagePathInExternalDir);
                     if (!file.isDirectory() && file.exists()) {
                         file.delete();
-                        // Display default image
-                        userSettings.setAppDefaultImage(true);
-                        loadDefaultImageAndDesc();
                     }
+                    // Display default image
+                    userSettings.setAppDefaultImage(true);
+                    loadDefaultImageAndDesc();
                 }
 
             }

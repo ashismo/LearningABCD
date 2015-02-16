@@ -78,6 +78,9 @@ public class Utility {
             UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
             DatabaseUtil dbUtil = new DatabaseUtil(userSettings.getContext());
             alphabetMap.putAll(dbUtil.getAllUserSettings());
+            // Set new map into singleton class to use in future
+            userSettings.setUsrSettingsMap(alphabetMap);
+
             text = alphabetMap.get(alphabet.toUpperCase().trim());
             if(text == null) {
                 text = "";

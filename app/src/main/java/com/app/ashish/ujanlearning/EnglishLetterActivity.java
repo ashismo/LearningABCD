@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -34,6 +35,7 @@ import com.app.ashish.util.Utility;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 import java.util.Random;
@@ -200,10 +202,13 @@ public class EnglishLetterActivity extends ActionBarActivity {
                                     imgPath = "english_100.jpg";
                                 }
                                 InputStream si1 = getAssets().open(imgPath);
-                                String imagePathInExternalDir = UserSettingsSingleton.getUserSettings().getAppDirPath()  + "/" + imgPath;
+                                UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
+                                userSettings.setAppDefaultImage(true);
+                                String imagePathInExternalDir = userSettings.getAppDirPath()  + "/" + imgPath;
                                 File file = new File(imagePathInExternalDir);
                                 if(file.exists()) {
                                     si1 = new FileInputStream(file);
+                                    userSettings.setAppDefaultImage(false);
                                 }
                                 Bitmap image = BitmapFactory.decodeStream(si1);
                                 Bitmap scaledImage = Bitmap.createScaledBitmap(image, imageView.getWidth(), (int) (imageView.getHeight() * .7), true);
@@ -312,17 +317,28 @@ public class EnglishLetterActivity extends ActionBarActivity {
                                 }
                             });
                         } else {
-                            UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
-                            String selectedText = textView.getText().toString();
-                            // Do not allow change if number is more than 20
-                            if(userSettings.getSelectedLearningOption() == Constants.ENGLISH_NUMBER_VALUE) {
-                                if(Integer.valueOf(selectedText) > 20) {
-                                    return;
+                                UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
+
+                                String selectedText = textView.getText().toString().trim();
+                                userSettings.setSelectedText(selectedText);
+                                // Do not allow change if number is more than 20
+                                if (userSettings.getSelectedLearningOption() == Constants.ENGLISH_NUMBER_VALUE) {
+                                    if (Integer.valueOf(selectedText) > 20) {
+                                        return;
+                                    }
                                 }
-                            }
-                            // Open a dialog
-                            openDialog(v);
-                            userSettings.setSelectedText(selectedText);
+
+                                // Open a dialog
+                                openDialog(v);
+
+
+                                // Display existing image. Do not allow delete the default image
+                                loadDefaultImageAndDesc();
+
+//                                // If default image then do not allow user to modify description
+//                                if(userSettings.isAppDefaultImage()) {
+//                                    imageDesc.edit
+//                                }
                         }
                     }
                 });
@@ -333,7 +349,7 @@ public class EnglishLetterActivity extends ActionBarActivity {
         }
     }
 
-    private void closeImageAndText(TextView alphabetText, TextView alphabetTextDesc) {
+   private void closeImageAndText(TextView alphabetText, TextView alphabetTextDesc) {
         if (test2Speech == null || !test2Speech.isSpeaking()) {
             ImageView imageView = (ImageView) findViewById(R.id.imageView_grid);
             imageView.setVisibility(View.INVISIBLE);
@@ -351,6 +367,8 @@ public class EnglishLetterActivity extends ActionBarActivity {
         View mView = inflater.inflate(R.layout.activity_dialog_user_input, null);
         alertDialogBuilder.setView(mView);
 
+        // Pickup current image and give option to the user to change
+
         alertDialogBuilder.setPositiveButton("OK",
                 new DialogInterface.OnClickListener() {
 
@@ -359,13 +377,15 @@ public class EnglishLetterActivity extends ActionBarActivity {
                         try {
                             UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
 
-                            // Compress and save image
-                            File file = new File(userSettings.getAppDirPath(), userSettings.getImageName());
-                            FileOutputStream fOut = new FileOutputStream(file);
+                            // Compress and save image if default image is not selected
+                            if(!userSettings.isAppDefaultImage()) {
+                                File file = new File(userSettings.getAppDirPath(), userSettings.getImageName());
+                                FileOutputStream fOut = new FileOutputStream(file);
 
-                            userSettings.getSelectedImageBM().compress(Bitmap.CompressFormat.JPEG, 20, fOut);
-                            fOut.flush();
-                            fOut.close();
+                                userSettings.getSelectedImageBM().compress(Bitmap.CompressFormat.JPEG, 20, fOut);
+                                fOut.flush();
+                                fOut.close();
+                            }
 
                             // Save description in database
                             EditText imageDesc = (EditText)userSettings.getAlertDialog().findViewById(R.id.image_desc);
@@ -388,24 +408,67 @@ public class EnglishLetterActivity extends ActionBarActivity {
                     public void onClick(DialogInterface dialog, int which) {
 //                        Intent negativeActivity = new Intent(getApplicationContext(),com.example.alertdialog.NegativeActivity.class);
 //                        startActivity(negativeActivity);
+                        UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
+                        String selectedText = userSettings.getSelectedText();
+                        InputStream si1 = null;
+                        String imgPath = "english_" + selectedText.toLowerCase() + ".jpg";
+                        userSettings.setImageName(imgPath);
+                        String imagePathInExternalDir = userSettings.getAppDirPath() + "/" + imgPath;
+                        File file = new File(imagePathInExternalDir);
+                        if (file.exists()) {
+                            userSettings.setAppDefaultImage(false);
+                        } else {
+                            userSettings.setAppDefaultImage(true);
+                        }
+
                     }
                 });
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
         UserSettingsSingleton.getUserSettings().setAlertDialog(alertDialog);
-        ImageButton imageButton = (ImageButton)alertDialog.findViewById(R.id.select_image);
+        Button imageButton = (Button)alertDialog.findViewById(R.id.select_image);
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Pick photo from gallery
-                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                photoPickerIntent.setType("image/*");
-                startActivityForResult(photoPickerIntent,NO_OF_SELECTED_IMAGE);
-                UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
-                userSettings.setImageName("english_" + userSettings.getSelectedText().toLowerCase().trim() + ".jpg");
+                selectPhotoFromGallery();
+
             }
         });
+
+        // Set default Image
+        Button defaultImgBtn = (Button)alertDialog.findViewById(R.id.set_default_Image);
+        defaultImgBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
+                if(userSettings.isAppDefaultImage()) {
+                    Toast.makeText(getApplicationContext(), R.string.already_default_image_selected, Toast.LENGTH_LONG).show();
+                } else {
+                    // Delete customized image then delete data from database and load values again
+                    String imgPath = "english_" + userSettings.getSelectedText().toLowerCase() + ".jpg";
+                    String imagePathInExternalDir = userSettings.getAppDirPath() + "/" + imgPath;
+                    File file = new File(imagePathInExternalDir);
+                    if (!file.isDirectory() && file.exists()) {
+                        file.delete();
+                        // Display default image
+                        userSettings.setAppDefaultImage(true);
+                        loadDefaultImageAndDesc();
+                    }
+                }
+
+            }
+        });
+    }
+
+    private void selectPhotoFromGallery() {
+        // Pick photo from gallery
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+        photoPickerIntent.setType("image/*");
+        startActivityForResult(photoPickerIntent,NO_OF_SELECTED_IMAGE);
+        UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
+        userSettings.setImageName("english_" + userSettings.getSelectedText().toLowerCase().trim() + ".jpg");
+        userSettings.setAppDefaultImage(false);
     }
 
     @Override
@@ -431,12 +494,46 @@ public class EnglishLetterActivity extends ActionBarActivity {
                         ImageView imageView = (ImageView)userSettings.getAlertDialog().findViewById(R.id.selected_image);
                         imageView.setImageBitmap(selectedImageBM);
                         imageView.setVisibility(View.VISIBLE);
-                        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(300,300);
+                        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(400,300);
                         imageView.setLayoutParams(parms);
                     }
             }
         } catch (Exception e) {
 
+        }
+    }
+
+    private void loadDefaultImageAndDesc() {
+        try {
+            UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
+            String selectedText = userSettings.getSelectedText();
+            InputStream si1 = null;
+            String imgPath = "english_" + selectedText.toLowerCase() + ".jpg";
+            userSettings.setImageName(imgPath);
+            String imagePathInExternalDir = userSettings.getAppDirPath() + "/" + imgPath;
+            File file = new File(imagePathInExternalDir);
+            if (file.exists()) {
+                si1 = new FileInputStream(file);
+                userSettings.setAppDefaultImage(false);
+            } else {
+                si1 = getAssets().open(imgPath);
+                userSettings.setAppDefaultImage(true);
+            }
+            Bitmap scaledImage = BitmapFactory.decodeStream(si1);
+            ImageView imageView = (ImageView) userSettings.getAlertDialog().findViewById(R.id.selected_image);
+            imageView.setImageBitmap(scaledImage);
+            imageView.setVisibility(View.VISIBLE);
+            LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(400, 300);
+            imageView.setLayoutParams(parms);
+
+            EditText imageDesc = (EditText) userSettings.getAlertDialog().findViewById(R.id.image_desc);
+            String textToBeDisplayed = Utility.getTextByAlphabet(selectedText);//userSettings.getUsrSettingsMap().get(selectedText);
+            if (userSettings.getSelectedLearningOption() != Constants.ENGLISH_NUMBER_VALUE) {
+                textToBeDisplayed = textToBeDisplayed.substring(6);
+            }
+            imageDesc.setText(textToBeDisplayed);
+        } catch(Exception e) {
+            Toast.makeText(getApplicationContext(),"Default Image Loading failed", Toast.LENGTH_LONG).show();
         }
     }
 }

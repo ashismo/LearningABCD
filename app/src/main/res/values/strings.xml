@@ -16,4 +16,5 @@
     <string name="select_image">Select Image</string>
     <string name="image_desc">Image Description</string>
     <string name="dialog_desc">Select Image and add Description</string>
+    <string name="already_default_image_selected">Default image is already selected</string>
 </resources>

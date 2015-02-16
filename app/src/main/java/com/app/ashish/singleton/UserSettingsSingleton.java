@@ -5,6 +5,9 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by ashis_000 on 2/14/2015.
  */
@@ -15,11 +18,13 @@ public class UserSettingsSingleton {
     private String appDirPath;
     private String imageName;
     private int noOfTimeHomePageAccessed = 0;
-    private String selectedText;
+    private String selectedText;                // A,B,C or a,b,c or 1,2,3
     private AlertDialog alertDialog;
     private Bitmap selectedImageBM;
     private String imageDesc;
     private int selectedLearningOption;
+    private Map<String, String> usrSettingsMap = new HashMap<>();
+    private boolean isAppDefaultImage;
 
     private UserSettingsSingleton(){}
     public static UserSettingsSingleton getUserSettings() {
@@ -107,5 +112,21 @@ public class UserSettingsSingleton {
 
     public void setSelectedLearningOption(int selectedLearningOption) {
         this.selectedLearningOption = selectedLearningOption;
+    }
+
+    public Map<String, String> getUsrSettingsMap() {
+        return usrSettingsMap;
+    }
+
+    public void setUsrSettingsMap(Map<String, String> usrSettingsMap) {
+        this.usrSettingsMap = usrSettingsMap;
+    }
+
+    public boolean isAppDefaultImage() {
+        return isAppDefaultImage;
+    }
+
+    public void setAppDefaultImage(boolean isAppDefaultImage) {
+        this.isAppDefaultImage = isAppDefaultImage;
     }
 }

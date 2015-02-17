@@ -60,8 +60,11 @@ public class MainActivity extends ActionBarActivity {
         if(userSettings.isEditMode()) {
             editModeUserMsg.setVisibility(View.VISIBLE);
             editModeUserMsg.setText(R.string.change_edit_mode_from_settings);
+            editModeUserMsg.setTextColor(Color.RED);
         } else {
-            editModeUserMsg.setVisibility(View.INVISIBLE);
+            editModeUserMsg.setText(R.string.setting_msg);
+            editModeUserMsg.setVisibility(View.VISIBLE);
+            editModeUserMsg.setTextColor(Color.BLUE);
         }
         addListenerOnSoundEnableCkBox();
         // Capital Letter

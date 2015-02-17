@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +26,7 @@ public class UserSettingsSingleton {
     private int selectedLearningOption;
     private Map<String, String> usrSettingsMap = new HashMap<>();
     private boolean isAppDefaultImage;
+    private boolean isAppDefaultImageChangedButNotSaved;
 
     private UserSettingsSingleton(){}
     public static UserSettingsSingleton getUserSettings() {
@@ -123,10 +125,22 @@ public class UserSettingsSingleton {
     }
 
     public boolean isAppDefaultImage() {
-        return isAppDefaultImage;
+        if(userSettings != null && userSettings.getSelectedText() != null && userSettings.getAppDirPath() != null) {
+            String imgPath = "english_" + userSettings.getSelectedText().toLowerCase() + ".jpg";
+            String imagePathInExternalDir = userSettings.getAppDirPath() + "/" + imgPath;
+            File file = new File(imagePathInExternalDir);
+            if (!file.isDirectory() && file.exists()) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    public void setAppDefaultImage(boolean isAppDefaultImage) {
-        this.isAppDefaultImage = isAppDefaultImage;
+    public boolean isAppDefaultImageChangedButNotSaved() {
+        return isAppDefaultImageChangedButNotSaved;
+    }
+
+    public void setAppDefaultImageChangedButNotSaved(boolean isAppDefaultImageChangedButNotSaved) {
+        this.isAppDefaultImageChangedButNotSaved = isAppDefaultImageChangedButNotSaved;
     }
 }

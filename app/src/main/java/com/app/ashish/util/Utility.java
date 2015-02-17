@@ -95,6 +95,7 @@ public class Utility {
         String editMode = dbUtil.getUserSettingsByParam(Constants.EDIT_MODE_COL);
         if(userSettings.getNoOfTimeHomePageAccessed() == 1) {
             editMode = "false";
+            dbUtil.updateUserSettings(Constants.EDIT_MODE_COL, "false");
         }
         userSettings.setEditMode(Boolean.valueOf(editMode));
 

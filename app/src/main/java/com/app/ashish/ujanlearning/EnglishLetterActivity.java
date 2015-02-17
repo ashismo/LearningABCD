@@ -380,6 +380,10 @@ public class EnglishLetterActivity extends ActionBarActivity {
 
                             // Compress and save image if default image is not selected
                             if(userSettings.isAppDefaultImageChangedButNotSaved()) {
+                                String imgPath = "english_" + userSettings.getSelectedText().toLowerCase() + ".jpg";
+                                String imagePathInExternalDir = userSettings.getAppDirPath() + "/" + imgPath;
+                                File customizedFile = new File(imagePathInExternalDir);
+
                                 if(userSettings.isAppDefaultImage()) {
                                     File file = new File(userSettings.getAppDirPath(), userSettings.getImageName());
                                     FileOutputStream fOut = new FileOutputStream(file);
@@ -387,13 +391,19 @@ public class EnglishLetterActivity extends ActionBarActivity {
                                     userSettings.getSelectedImageBM().compress(Bitmap.CompressFormat.JPEG, 20, fOut);
                                     fOut.flush();
                                     fOut.close();
+
+                                    // Delete existing customized image
+//                                    if (!customizedFile.isDirectory() && customizedFile.exists()) {
+//                                        customizedFile.delete();
+//                                        userSettings.setAppDefaultImageChangedButNotSaved(false);
+//                                    }
                                 } // Delete customized image then delete data from database
                                 else {
-                                    String imgPath = "english_" + userSettings.getSelectedText().toLowerCase() + ".jpg";
-                                    String imagePathInExternalDir = userSettings.getAppDirPath() + "/" + imgPath;
-                                    File file = new File(imagePathInExternalDir);
-                                    if (!file.isDirectory() && file.exists()) {
-                                        file.delete();
+//                                    String imgPath = "english_" + userSettings.getSelectedText().toLowerCase() + ".jpg";
+//                                    String imagePathInExternalDir = userSettings.getAppDirPath() + "/" + imgPath;
+//                                    File file = new File(imagePathInExternalDir);
+                                    if (!customizedFile.isDirectory() && customizedFile.exists()) {
+                                        customizedFile.delete();
                                         userSettings.setAppDefaultImageChangedButNotSaved(false);
                                     }
                                 }
@@ -533,6 +543,7 @@ public class EnglishLetterActivity extends ActionBarActivity {
             File file = new File(imagePathInExternalDir);
             if (file.exists() && !userSettings.isAppDefaultImageChangedButNotSaved()) {
                 si1 = new FileInputStream(file);
+                userSettings.setAppDefaultImageChangedButNotSaved(true);
             } else {
                 si1 = getAssets().open(imgPath);
             }

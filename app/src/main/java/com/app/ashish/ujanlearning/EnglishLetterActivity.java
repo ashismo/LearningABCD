@@ -18,10 +18,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -36,7 +34,6 @@ import com.app.ashish.util.Utility;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 import java.util.Random;
@@ -334,12 +331,7 @@ public class EnglishLetterActivity extends ActionBarActivity {
 
 
                                 // Display existing image. Do not allow delete the default image
-                                loadDefaultImageAndDesc();
-
-//                                // If default image then do not allow user to modify description
-//                                if(userSettings.isAppDefaultImage()) {
-//                                    imageDesc.edit
-//                                }
+                                loadCurrentImageAndDesc();
                         }
                     }
                 });
@@ -378,38 +370,23 @@ public class EnglishLetterActivity extends ActionBarActivity {
                         try {
                             UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
 
+                            String imgPath = "english_" + userSettings.getSelectedText().toLowerCase() + ".jpg";
+                            String imagePathInExternalDir = userSettings.getAppDirPath() + "/" + imgPath;
+                            File customizedFile = new File(imagePathInExternalDir);
+
                             // Compress and save image if default image is not selected
-                            if(userSettings.isAppDefaultImageChangedButNotSaved()) {
-                                String imgPath = "english_" + userSettings.getSelectedText().toLowerCase() + ".jpg";
-                                String imagePathInExternalDir = userSettings.getAppDirPath() + "/" + imgPath;
-                                File customizedFile = new File(imagePathInExternalDir);
-
-                                if(userSettings.isAppDefaultImage()) {
-                                    File file = new File(userSettings.getAppDirPath(), userSettings.getImageName());
-                                    FileOutputStream fOut = new FileOutputStream(file);
-
+                            if(userSettings.isNewImageSelected()) {
+                                FileOutputStream fOut = new FileOutputStream(customizedFile);
+                                if(userSettings.getSelectedImageBM() != null) {
                                     userSettings.getSelectedImageBM().compress(Bitmap.CompressFormat.JPEG, 20, fOut);
                                     fOut.flush();
                                     fOut.close();
-
-                                    // Delete existing customized image
-//                                    if (!customizedFile.isDirectory() && customizedFile.exists()) {
-//                                        customizedFile.delete();
-//                                        userSettings.setAppDefaultImageChangedButNotSaved(false);
-//                                    }
-                                } // Delete customized image then delete data from database
-                                else {
-//                                    String imgPath = "english_" + userSettings.getSelectedText().toLowerCase() + ".jpg";
-//                                    String imagePathInExternalDir = userSettings.getAppDirPath() + "/" + imgPath;
-//                                    File file = new File(imagePathInExternalDir);
-                                    if (!customizedFile.isDirectory() && customizedFile.exists()) {
-                                        customizedFile.delete();
-                                        userSettings.setAppDefaultImageChangedButNotSaved(false);
-                                    }
+                                }
+                            } else {
+                                if(customizedFile.exists()) {
+                                    customizedFile.delete();
                                 }
                             }
-
-
 
                             // Save description in database
                             EditText imageDesc = (EditText)userSettings.getAlertDialog().findViewById(R.id.image_desc);
@@ -421,7 +398,6 @@ public class EnglishLetterActivity extends ActionBarActivity {
                                 imageDescStr = selectedText + " for " + imageDescStr;
                             }
                             dbUtil.updateUserSettings(selectedText, imageDescStr);
-                            userSettings.setAppDefaultImageChangedButNotSaved(false);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -434,11 +410,6 @@ public class EnglishLetterActivity extends ActionBarActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
-                        String selectedText = userSettings.getSelectedText();
-                        InputStream si1 = null;
-                        String imgPath = "english_" + selectedText.toLowerCase() + ".jpg";
-                        userSettings.setImageName(imgPath);
-                        userSettings.setAppDefaultImageChangedButNotSaved(false);
                     }
                 });
 
@@ -459,20 +430,8 @@ public class EnglishLetterActivity extends ActionBarActivity {
         defaultImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
-                if(userSettings.isAppDefaultImage() && !userSettings.isAppDefaultImageChangedButNotSaved()) {
-                    Toast.makeText(getApplicationContext(), R.string.already_default_image_selected, Toast.LENGTH_LONG).show();
-                } else {
-                    // Delete customized image then delete data from database and load values again
-                    String imgPath = "english_" + userSettings.getSelectedText().toLowerCase() + ".jpg";
-                    String imagePathInExternalDir = userSettings.getAppDirPath() + "/" + imgPath;
-                    File file = new File(imagePathInExternalDir);
-                    if (!file.isDirectory() && file.exists()) {
-                        userSettings.setAppDefaultImageChangedButNotSaved(true);
-                    }
-                    // Display default image
-                    loadDefaultImageAndDesc();
-                }
+
+                loadDefaultImageAndDesc();
 
             }
         });
@@ -504,7 +463,6 @@ public class EnglishLetterActivity extends ActionBarActivity {
         startActivityForResult(photoPickerIntent,NO_OF_SELECTED_IMAGE);
         UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
         userSettings.setImageName("english_" + userSettings.getSelectedText().toLowerCase().trim() + ".jpg");
-        userSettings.setAppDefaultImageChangedButNotSaved(true);
     }
 
     @Override
@@ -525,6 +483,7 @@ public class EnglishLetterActivity extends ActionBarActivity {
                         imageView.setVisibility(View.VISIBLE);
                         LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(400,300);
                         imageView.setLayoutParams(parms);
+                        userSettings.setNewImageSelected(true);
                     }
             }
         } catch (Exception e) {
@@ -536,32 +495,57 @@ public class EnglishLetterActivity extends ActionBarActivity {
         try {
             UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
             String selectedText = userSettings.getSelectedText();
-            InputStream si1 = null;
             String imgPath = "english_" + selectedText.toLowerCase() + ".jpg";
-            userSettings.setImageName(imgPath);
-            String imagePathInExternalDir = userSettings.getAppDirPath() + "/" + imgPath;
-            File file = new File(imagePathInExternalDir);
-            if (file.exists() && !userSettings.isAppDefaultImageChangedButNotSaved()) {
-                si1 = new FileInputStream(file);
-                userSettings.setAppDefaultImageChangedButNotSaved(true);
-            } else {
-                si1 = getAssets().open(imgPath);
-            }
-            Bitmap scaledImage = BitmapFactory.decodeStream(si1);
-            ImageView imageView = (ImageView) userSettings.getAlertDialog().findViewById(R.id.selected_image);
-            imageView.setImageBitmap(scaledImage);
-            imageView.setVisibility(View.VISIBLE);
-            LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(400, 300);
-            imageView.setLayoutParams(parms);
+            InputStream si1 = getAssets().open(imgPath);
+            displayImageInImageView(si1);
+            displayImageDescInDialog();
+            userSettings.setNewImageSelected(false);
 
-            EditText imageDesc = (EditText) userSettings.getAlertDialog().findViewById(R.id.image_desc);
-            String textToBeDisplayed = Utility.getTextByAlphabet(selectedText);//userSettings.getUsrSettingsMap().get(selectedText);
-            if (userSettings.getSelectedLearningOption() != Constants.ENGLISH_NUMBER_VALUE) {
-                textToBeDisplayed = textToBeDisplayed.substring(6);
-            }
-            imageDesc.setText(textToBeDisplayed);
         } catch(Exception e) {
             Toast.makeText(getApplicationContext(),"Default Image Loading failed", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void loadCurrentImageAndDesc() {
+        try {
+            UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
+            String selectedText = userSettings.getSelectedText();
+            InputStream si1 = null;
+            String imgPath = "english_" + selectedText.toLowerCase() + ".jpg";
+            String imagePathInExternalDir = userSettings.getAppDirPath() + "/" + imgPath;
+            File file = new File(imagePathInExternalDir);
+            if (file.exists()) {
+                si1 = new FileInputStream(file);
+            } else {
+                si1 = getAssets().open(imgPath);
+            }
+
+            displayImageInImageView(si1);
+
+            displayImageDescInDialog();
+        } catch(Exception e) {
+            Toast.makeText(getApplicationContext(),"Default Image Loading failed", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void displayImageDescInDialog() {
+        UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
+        String selectedText = userSettings.getSelectedText();
+        EditText imageDesc = (EditText) userSettings.getAlertDialog().findViewById(R.id.image_desc);
+        String textToBeDisplayed = Utility.getTextByAlphabet(selectedText);//userSettings.getUsrSettingsMap().get(selectedText);
+        if (userSettings.getSelectedLearningOption() != Constants.ENGLISH_NUMBER_VALUE) {
+            textToBeDisplayed = textToBeDisplayed.substring(6);
+        }
+        imageDesc.setText(textToBeDisplayed);
+    }
+
+    private void displayImageInImageView(InputStream si1) {
+        UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
+        Bitmap scaledImage = BitmapFactory.decodeStream(si1);
+        ImageView imageView = (ImageView) userSettings.getAlertDialog().findViewById(R.id.selected_image);
+        imageView.setImageBitmap(scaledImage);
+        imageView.setVisibility(View.VISIBLE);
+        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(400, 300);
+        imageView.setLayoutParams(parms);
     }
 }

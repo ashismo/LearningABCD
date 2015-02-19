@@ -25,8 +25,8 @@ public class UserSettingsSingleton {
     private String imageDesc;
     private int selectedLearningOption;
     private Map<String, String> usrSettingsMap = new HashMap<>();
-    private boolean isAppDefaultImage;
-    private boolean isAppDefaultImageChangedButNotSaved;
+//    private boolean isAppDefaultImage;
+    private boolean isNewImageSelected;
 
     private UserSettingsSingleton(){}
     public static UserSettingsSingleton getUserSettings() {
@@ -124,23 +124,24 @@ public class UserSettingsSingleton {
         this.usrSettingsMap = usrSettingsMap;
     }
 
-    public boolean isAppDefaultImage() {
-        if(userSettings != null && userSettings.getSelectedText() != null && userSettings.getAppDirPath() != null) {
-            String imgPath = "english_" + userSettings.getSelectedText().toLowerCase() + ".jpg";
-            String imagePathInExternalDir = userSettings.getAppDirPath() + "/" + imgPath;
-            File file = new File(imagePathInExternalDir);
-            if (!file.isDirectory() && file.exists()) {
-                return false;
-            }
-        }
-        return true;
+//    public boolean isAppDefaultImage() {
+//        if(userSettings != null && userSettings.getSelectedText() != null && userSettings.getAppDirPath() != null) {
+//            String imgPath = "english_" + userSettings.getSelectedText().toLowerCase() + ".jpg";
+//            String imagePathInExternalDir = userSettings.getAppDirPath() + "/" + imgPath;
+//            File file = new File(imagePathInExternalDir);
+//            if (!file.isDirectory() && file.exists()) {
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
+
+
+    public boolean isNewImageSelected() {
+        return isNewImageSelected;
     }
 
-    public boolean isAppDefaultImageChangedButNotSaved() {
-        return isAppDefaultImageChangedButNotSaved;
-    }
-
-    public void setAppDefaultImageChangedButNotSaved(boolean isAppDefaultImageChangedButNotSaved) {
-        this.isAppDefaultImageChangedButNotSaved = isAppDefaultImageChangedButNotSaved;
+    public void setNewImageSelected(boolean isNewImageSelected) {
+        this.isNewImageSelected = isNewImageSelected;
     }
 }

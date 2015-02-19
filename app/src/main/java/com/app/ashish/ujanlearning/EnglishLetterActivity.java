@@ -352,8 +352,8 @@ public class EnglishLetterActivity extends ActionBarActivity {
     }
 
 
-    public void openDialog(View view){
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+    public void openDialog(final View view){
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage(R.string.dialog_desc);
         // Get the layout inflater
         LayoutInflater inflater =  (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -367,41 +367,16 @@ public class EnglishLetterActivity extends ActionBarActivity {
 
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
-                        try {
-                            UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
-
-                            String imgPath = "english_" + userSettings.getSelectedText().toLowerCase() + ".jpg";
-                            String imagePathInExternalDir = userSettings.getAppDirPath() + "/" + imgPath;
-                            File customizedFile = new File(imagePathInExternalDir);
-
-                            // Compress and save image if default image is not selected
-                            if(userSettings.isNewImageSelected()) {
-                                FileOutputStream fOut = new FileOutputStream(customizedFile);
-                                if(userSettings.getSelectedImageBM() != null) {
-                                    userSettings.getSelectedImageBM().compress(Bitmap.CompressFormat.JPEG, 20, fOut);
-                                    fOut.flush();
-                                    fOut.close();
-                                }
-                            } else {
-                                if(customizedFile.exists()) {
-                                    customizedFile.delete();
-                                }
-                            }
-
-                            // Save description in database
-                            EditText imageDesc = (EditText)userSettings.getAlertDialog().findViewById(R.id.image_desc);
-                            DatabaseUtil dbUtil = new DatabaseUtil(userSettings.getContext());
-                            String imageDescStr = imageDesc.getText().toString();
-                            String selectedText = userSettings.getSelectedText().toUpperCase();
-                            if(userSettings.getSelectedLearningOption() == Constants.ENGLISH_CAPS_VALUE ||
-                                    userSettings.getSelectedLearningOption() == Constants.ENGLISH_SMALL_VALUE) {
-                                imageDescStr = selectedText + " for " + imageDescStr;
-                            }
-                            dbUtil.updateUserSettings(selectedText, imageDescStr);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
+//                        // Validation: Description should not be empty
+//                        AlertDialog ad = alertDialogBuilder.create();
+//                        EditText imageDesc = (EditText)ad.findViewById(R.id.image_desc);
+//                        if(imageDesc == null || imageDesc.getText().toString().trim().equals("")) {
+//                            imageDesc.setHintTextColor(Color.RED);
+//                            imageDesc.setHint("Description can not be blank");
+//                            ad.show();
+//                        } else {
+                            saveImageAndDesc();
+//                        }
                     }
                 });
         alertDialogBuilder.setNegativeButton("Cancel",
@@ -454,6 +429,43 @@ public class EnglishLetterActivity extends ActionBarActivity {
                 }
             }
         });
+    }
+
+    private void saveImageAndDesc() {
+        try {
+            UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
+
+            String imgPath = "english_" + userSettings.getSelectedText().toLowerCase() + ".jpg";
+            String imagePathInExternalDir = userSettings.getAppDirPath() + "/" + imgPath;
+            File customizedFile = new File(imagePathInExternalDir);
+
+            // Compress and save image if default image is not selected
+            if(userSettings.isNewImageSelected()) {
+                FileOutputStream fOut = new FileOutputStream(customizedFile);
+                if(userSettings.getSelectedImageBM() != null) {
+                    userSettings.getSelectedImageBM().compress(Bitmap.CompressFormat.JPEG, 20, fOut);
+                    fOut.flush();
+                    fOut.close();
+                }
+            } else {
+                if(customizedFile.exists()) {
+                    customizedFile.delete();
+                }
+            }
+
+            // Save description in database
+            EditText imageDesc = (EditText)userSettings.getAlertDialog().findViewById(R.id.image_desc);
+            DatabaseUtil dbUtil = new DatabaseUtil(userSettings.getContext());
+            String imageDescStr = imageDesc.getText().toString();
+            String selectedText = userSettings.getSelectedText().toUpperCase();
+            if(userSettings.getSelectedLearningOption() == Constants.ENGLISH_CAPS_VALUE ||
+                    userSettings.getSelectedLearningOption() == Constants.ENGLISH_SMALL_VALUE) {
+                imageDescStr = selectedText + " for " + imageDescStr;
+            }
+            dbUtil.updateUserSettings(selectedText, imageDescStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void selectPhotoFromGallery() {

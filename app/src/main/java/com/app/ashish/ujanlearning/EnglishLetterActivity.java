@@ -385,6 +385,8 @@ public class EnglishLetterActivity extends ActionBarActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
+                        //Setting the customized image reference to null
+                        userSettings.setSelectedImageBM(null);
                     }
                 });
 
@@ -446,6 +448,8 @@ public class EnglishLetterActivity extends ActionBarActivity {
                     userSettings.getSelectedImageBM().compress(Bitmap.CompressFormat.JPEG, 20, fOut);
                     fOut.flush();
                     fOut.close();
+                    //Setting the customized image reference to null
+                    userSettings.setSelectedImageBM(null);
                 }
             } else {
                 if(customizedFile.exists()) {

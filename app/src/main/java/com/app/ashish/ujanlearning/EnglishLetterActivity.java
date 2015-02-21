@@ -420,6 +420,8 @@ public class EnglishLetterActivity extends ActionBarActivity {
             public void onClick(View v) {
                 UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
                 Bitmap selectedImageBM = userSettings.getSelectedImageBM();
+                // Get customized image bit map
+
                 if(selectedImageBM != null) {
                     ImageView imageView = (ImageView) userSettings.getAlertDialog().findViewById(R.id.selected_image);
                     Matrix matrix = new Matrix();
@@ -510,12 +512,15 @@ public class EnglishLetterActivity extends ActionBarActivity {
     private void loadDefaultImageAndDesc() {
         try {
             UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
+            DatabaseUtil dbUtil = new DatabaseUtil(userSettings.getContext());
             String selectedText = userSettings.getSelectedText();
             String imgPath = "english_" + selectedText.toLowerCase() + ".jpg";
+            dbUtil.deleteUserSettingsByParam(selectedText.toUpperCase());
             InputStream si1 = getAssets().open(imgPath);
             displayImageInImageView(si1);
             displayImageDescInDialog();
             userSettings.setNewImageSelected(false);
+            userSettings.setSelectedImageBM(null);
 
         } catch(Exception e) {
             Toast.makeText(getApplicationContext(),"Default Image Loading failed", Toast.LENGTH_LONG).show();

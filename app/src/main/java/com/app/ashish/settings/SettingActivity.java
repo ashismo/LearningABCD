@@ -19,6 +19,7 @@ import com.app.ashish.util.DatabaseUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.Map;
 
 /**
  * Created by ashis_000 on 2/14/2015.
@@ -75,23 +76,21 @@ public class SettingActivity extends ActionBarActivity {
                                 UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
                                 String imagePathInExternalDir = userSettings.getAppDirPath();
                                 File folder = new File(imagePathInExternalDir);
+                                boolean isAllCustomizedImagesDeleted = false;
                                 if (folder.exists() && folder.isDirectory()) {
-                                    // Delete all images name starting with english_
+                                    // Delete all images name starting with english_ and corresponding description
                                     int count = 0;
                                     for(File f : folder.listFiles()) {
                                         if(f != null && f.exists() && f.getName().contains("english_")) {
                                             f.delete();
                                             count++;
                                         }
-                                        if(count > 1) {
-                                            Toast.makeText(getApplicationContext(),count+"",Toast.LENGTH_LONG).show();
-                                            break;
-                                        }
                                     }
 
                                 }
                                 // Reset the switch back to false
                                 resetToSwitch.setChecked(false);
+                                dbUtil.resetAllUserSettings();
                             }
                         });
                 alertDialogBuilder.setNegativeButton("Cancel",

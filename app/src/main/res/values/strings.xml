@@ -13,8 +13,8 @@
     <string name="developed_by">Developed By - Ashish Kumar Mondal</string>
     <string name="edit_mode">Edit Mode</string>
     <string name="reset_to_default">Reset to Default</string>
-    <string name="change_edit_mode_from_settings">Once done, change Edit mode off from settings</string>
-    <string name="setting_msg">To change image, go to Settings and change Edit mode on</string>
+    <string name="change_edit_mode_from_settings">After changing image go to Menu -> Settings -> Edit mode off</string>
+    <string name="setting_msg">To change image, go to Menu -> Settings -> Edit mode on</string>
     <string name="select_image">Select Image</string>
     <string name="image_desc">Image Description</string>
     <string name="dialog_desc">Select Image and add Description</string>

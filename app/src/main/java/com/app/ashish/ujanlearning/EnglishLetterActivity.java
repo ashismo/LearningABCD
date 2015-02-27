@@ -535,7 +535,7 @@ public class EnglishLetterActivity extends ActionBarActivity {
             String imgPath = "english_" + selectedText.toLowerCase() + ".jpg";
             String imagePathInExternalDir = userSettings.getAppDirPath() + "/" + imgPath;
             File file = new File(imagePathInExternalDir);
-            if (file.exists()) {
+            if (file.exists() && file.length() > 0) {
                 si1 = new FileInputStream(file);
             } else {
                 si1 = getAssets().open(imgPath);

@@ -50,6 +50,8 @@ public class EnglishLetterActivity extends ActionBarActivity {
     private boolean isAllNumberSelected = false;
     private boolean isEditMode = false;
     private final int NO_OF_SELECTED_IMAGE = 1;
+    AlertDialog alertDialog = null;
+    Bitmap scaledImage = null;
 
 
     @Override
@@ -390,7 +392,7 @@ public class EnglishLetterActivity extends ActionBarActivity {
                     }
                 });
 
-        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog = alertDialogBuilder.create();
         alertDialog.show();
         UserSettingsSingleton.getUserSettings().setAlertDialog(alertDialog);
         Button imageButton = (Button)alertDialog.findViewById(R.id.select_image);
@@ -407,7 +409,8 @@ public class EnglishLetterActivity extends ActionBarActivity {
         defaultImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Button rotateBtn = (Button)alertDialog.findViewById(R.id.rotate_button);
+                rotateBtn.setVisibility(View.INVISIBLE);
                 loadDefaultImageAndDesc();
 
             }
@@ -421,7 +424,12 @@ public class EnglishLetterActivity extends ActionBarActivity {
                 UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
                 Bitmap selectedImageBM = userSettings.getSelectedImageBM();
                 // Get customized image bit map
-
+                if(selectedImageBM == null) {
+                    ImageView imageView = (ImageView) alertDialog.findViewById(R.id.selected_image);
+                    selectedImageBM = scaledImage; //imageView.getDrawingCache();
+                    userSettings.setSelectedImageBM(selectedImageBM);
+                    userSettings.setNewImageSelected(true);
+                }
                 if(selectedImageBM != null) {
                     ImageView imageView = (ImageView) userSettings.getAlertDialog().findViewById(R.id.selected_image);
                     Matrix matrix = new Matrix();
@@ -502,6 +510,8 @@ public class EnglishLetterActivity extends ActionBarActivity {
                         LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(400,300);
                         imageView.setLayoutParams(parms);
                         userSettings.setNewImageSelected(true);
+                        Button rotateBtn = (Button)alertDialog.findViewById(R.id.rotate_button);
+                        rotateBtn.setVisibility(View.VISIBLE);
                     }
             }
         } catch (Exception e) {
@@ -539,6 +549,8 @@ public class EnglishLetterActivity extends ActionBarActivity {
                 si1 = new FileInputStream(file);
             } else {
                 si1 = getAssets().open(imgPath);
+                Button rotateBtn = (Button)alertDialog.findViewById(R.id.rotate_button);
+                rotateBtn.setVisibility(View.INVISIBLE);
             }
 
             displayImageInImageView(si1);
@@ -562,7 +574,7 @@ public class EnglishLetterActivity extends ActionBarActivity {
 
     private void displayImageInImageView(InputStream si1) {
         UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
-        Bitmap scaledImage = BitmapFactory.decodeStream(si1);
+        scaledImage = BitmapFactory.decodeStream(si1);
         ImageView imageView = (ImageView) userSettings.getAlertDialog().findViewById(R.id.selected_image);
         imageView.setImageBitmap(scaledImage);
         imageView.setVisibility(View.VISIBLE);

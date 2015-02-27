@@ -204,7 +204,7 @@ public class EnglishLetterActivity extends ActionBarActivity {
 //                                userSettings.setAppDefaultImage(true);
                                 String imagePathInExternalDir = userSettings.getAppDirPath()  + "/" + imgPath;
                                 File file = new File(imagePathInExternalDir);
-                                if(file.exists()) {
+                                if(file.exists() && file.length() > 0) {
                                     si1 = new FileInputStream(file);
 //                                    userSettings.setAppDefaultImage(false);
                                 }

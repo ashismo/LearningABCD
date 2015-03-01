@@ -100,16 +100,47 @@ public class MainActivity extends ActionBarActivity {
         engNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), EnglishLetterActivity.class);
-                intent.putExtra(Constants.SELECTED_INTENT, Constants.ENGLISH_NUMBER_VALUE);
-                UserSettingsSingleton.getUserSettings().setSelectedLearningOption(Constants.ENGLISH_NUMBER_VALUE);
-                onNumberLimitClicked(v);
-                intent.putExtra(Constants.SELECTED_NUMBER_KEY, selectedNumber);
-                contrlSound(intent);
-                startActivity(intent);
+                callRespectiveNumber(v);
 
             }
         });
+
+        RadioButton engNumber10 = (RadioButton)findViewById(R.id.radio_num_10);
+        engNumber10.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callRespectiveNumber(v);
+
+            }
+        });
+
+        RadioButton engNumber20 = (RadioButton)findViewById(R.id.radio_num_20);
+        engNumber20.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callRespectiveNumber(v);
+
+            }
+        });
+
+        RadioButton engNumber100 = (RadioButton)findViewById(R.id.radio_num_100);
+        engNumber100.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callRespectiveNumber(v);
+
+            }
+        });
+    }
+
+    private void callRespectiveNumber(View v) {
+        Intent intent = new Intent(getApplicationContext(), EnglishLetterActivity.class);
+        intent.putExtra(Constants.SELECTED_INTENT, Constants.ENGLISH_NUMBER_VALUE);
+        UserSettingsSingleton.getUserSettings().setSelectedLearningOption(Constants.ENGLISH_NUMBER_VALUE);
+        onNumberLimitClicked(v);
+        intent.putExtra(Constants.SELECTED_NUMBER_KEY, selectedNumber);
+        contrlSound(intent);
+        startActivity(intent);
     }
 
     public void onNumberLimitClicked(View view) {

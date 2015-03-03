@@ -50,8 +50,9 @@ public class EnglishLetterActivity extends ActionBarActivity {
     private boolean isAllNumberSelected = false;
     private boolean isEditMode = false;
     private final int NO_OF_SELECTED_IMAGE = 1;
-    AlertDialog alertDialog = null;
-    Bitmap scaledImage = null;
+    private AlertDialog alertDialog = null;
+    private Bitmap scaledImage = null;
+    private boolean isImgDescBlank = false;
 
 
     @Override
@@ -167,17 +168,19 @@ public class EnglishLetterActivity extends ActionBarActivity {
 
         for(int i = 0 ; i < alphabet.length; i++) {
             TableRow row = new TableRow(this);
-            row.setBackgroundColor(Color.GRAY);
+            row.setBackgroundColor(Color.YELLOW);
             row.setMinimumHeight(70);
             for(int j = 0; j < alphabet[i].length; j++) {
                 final TextView textView = new TextView(this);
 
                 textView.setText(alphabet[i][j]);
+                textView.setTextColor(Color.BLUE);
 
                 //textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 textView.setTextSize(60);
                 if((i+j) % 2 == 0) {
                     textView.setBackgroundColor(Color.WHITE);
+//                    textView.setTextColor(Color.BLUE);
                 }
                 textView.setGravity(Gravity.CENTER);
 
@@ -327,13 +330,15 @@ public class EnglishLetterActivity extends ActionBarActivity {
                                         return;
                                     }
                                 }
-
+                                // If selected text is empty then do not open the dialog box
+                            if(!"".equals(selectedText)) {
                                 // Open a dialog
                                 openDialog(v);
 
 
                                 // Display existing image. Do not allow delete the default image
                                 loadCurrentImageAndDesc();
+                            }
                         }
                     }
                 });
@@ -354,6 +359,7 @@ public class EnglishLetterActivity extends ActionBarActivity {
     }
 
 
+
     public void openDialog(final View view){
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage(R.string.dialog_desc);
@@ -369,16 +375,19 @@ public class EnglishLetterActivity extends ActionBarActivity {
 
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
-//                        // Validation: Description should not be empty
-//                        AlertDialog ad = alertDialogBuilder.create();
-//                        EditText imageDesc = (EditText)ad.findViewById(R.id.image_desc);
-//                        if(imageDesc == null || imageDesc.getText().toString().trim().equals("")) {
+                        // Validation: Description should not be empty
+                        EditText imageDesc = (alertDialog != null) ? (EditText)alertDialog.findViewById(R.id.image_desc) : null;
+                        if(imageDesc == null || imageDesc.getText().toString().trim().equals("")) {
+                            isImgDescBlank = true;
 //                            imageDesc.setHintTextColor(Color.RED);
 //                            imageDesc.setHint("Description can not be blank");
-//                            ad.show();
-//                        } else {
+//                            alertDialog.show();
+//                            alertDialog = alertDialogBuilder.create();
+//                            alertDialog.show();
+                        } else {
+                            isImgDescBlank = false;
                             saveImageAndDesc();
-//                        }
+                        }
                     }
                 });
         alertDialogBuilder.setNegativeButton("Cancel",
@@ -394,6 +403,33 @@ public class EnglishLetterActivity extends ActionBarActivity {
 
         alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(DialogInterface dialog) {
+
+                Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                b.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        // Validation: Description should not be empty
+                        EditText imageDesc = (alertDialog != null) ? (EditText)alertDialog.findViewById(R.id.image_desc) : null;
+                        if(imageDesc == null || imageDesc.getText().toString().trim().equals("")) {
+                            isImgDescBlank = true;
+                            imageDesc.setHintTextColor(Color.RED);
+                            imageDesc.setHint("Description can not be blank");
+                        } else {
+                            isImgDescBlank = false;
+                            saveImageAndDesc();
+                            alertDialog.dismiss();
+                        }
+                    }
+                });
+            }
+        });
+
         UserSettingsSingleton.getUserSettings().setAlertDialog(alertDialog);
         Button imageButton = (Button)alertDialog.findViewById(R.id.select_image);
         imageButton.setOnClickListener(new View.OnClickListener() {

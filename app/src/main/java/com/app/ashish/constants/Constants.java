@@ -23,4 +23,5 @@ public class Constants {
 
     public static final String EDIT_MODE_COL="EDIT_MODE";
     public static final String RESET_MODE_COL="RESET_MODE";
+    public static final String SOUND_ON="SOUND_ON";
 }

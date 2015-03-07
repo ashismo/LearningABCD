@@ -2,6 +2,7 @@ package com.app.ashish.util;
 
 import android.content.Context;
 import android.os.Environment;
+import android.speech.tts.TextToSpeech;
 import android.widget.Toast;
 
 import com.app.ashish.constants.Constants;
@@ -9,12 +10,15 @@ import com.app.ashish.singleton.UserSettingsSingleton;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
  * Created by ashis_000 on 2/6/2015.
  */
 public class Utility {
+    private static TextToSpeech text2Speech = null;
+    private static UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
     private static Map<String, String> alphabetMap = new HashMap<String, String>();
     public static void initAlphabetMap(){
         alphabetMap.put("A", "A for Apple");
@@ -112,5 +116,37 @@ public class Utility {
             }
         }
         userSettings.setAppDirPath(folderName);
+    }
+
+    public static TextToSpeech getSpechInitialized(Context context) {
+        // Initialize text to speech object
+        UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
+        if(userSettings.isSoundOn() && text2Speech == null) {
+            text2Speech = new TextToSpeech(context,
+                    new TextToSpeech.OnInitListener() {
+                        @Override
+                        public void onInit(int status) {
+                            if (status != TextToSpeech.ERROR) {
+                                text2Speech.setLanguage(Locale.UK);
+                                text2Speech.setSpeechRate(0.6f);
+                            }
+                        }
+                    });
+        }
+        return text2Speech;
+    }
+
+    public static void deinitText2Speech() {
+        if(text2Speech !=null){
+            text2Speech.stop();
+            text2Speech.shutdown();
+        }
+    }
+
+    public static void speak(String text) {
+        if (text2Speech != null && userSettings.isSoundOn()) {
+            text2Speech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+
+        }
     }
 }

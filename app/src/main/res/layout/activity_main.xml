@@ -13,34 +13,6 @@
         <ImageView
             android:layout_width="100dp"
             android:layout_height="120dp"
-            android:id="@+id/small_abcd"
-            android:layout_gravity="left|center_vertical"
-            android:src="@drawable/small_abcd" />
-
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="120dp"
-            android:id="@+id/num_123"
-            android:layout_gravity="right|center_vertical"
-            android:src="@drawable/num_123" />
-
-        <ImageView
-            android:layout_width="70dp"
-            android:layout_height="80dp"
-            android:id="@+id/sound"
-            android:layout_gravity="right|top"
-            android:src="@drawable/sound_on" />
-
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="120dp"
-            android:id="@+id/caps_abcd"
-            android:layout_gravity="center_horizontal|top"
-            android:src="@drawable/caps_abc" />
-
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="120dp"
             android:id="@+id/num_100"
             android:layout_gravity="right|bottom"
             android:src="@drawable/num_100" />
@@ -58,6 +30,41 @@
             android:id="@+id/num_10"
             android:layout_gravity="left|bottom"
             android:src="@drawable/num_10" />
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="120dp"
+            android:id="@+id/caps_abcd"
+            android:layout_gravity="left|top"
+            android:src="@drawable/caps_abc" />
+
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="80dp"
+            android:id="@+id/sound"
+            android:layout_gravity="center"
+            android:src="@drawable/sound_on" />
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="120dp"
+            android:id="@+id/small_abcd"
+            android:layout_gravity="right|top"
+            android:src="@drawable/small_abcd" />
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="120dp"
+            android:id="@+id/num_123"
+            android:layout_gravity="left|center_vertical"
+            android:src="@drawable/num_123" />
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="120dp"
+            android:id="@+id/colors"
+            android:layout_gravity="right|center_vertical"
+            android:src="@drawable/colors" />
 
     </FrameLayout>
 

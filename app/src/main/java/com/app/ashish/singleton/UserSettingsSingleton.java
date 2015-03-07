@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,6 +28,8 @@ public class UserSettingsSingleton {
     private Map<String, String> usrSettingsMap = new HashMap<>();
 //    private boolean isAppDefaultImage;
     private boolean isNewImageSelected;
+    private List<String> colorFilesList;
+    private boolean isSoundOn;
 
     private UserSettingsSingleton(){}
     public static UserSettingsSingleton getUserSettings() {
@@ -143,5 +146,21 @@ public class UserSettingsSingleton {
 
     public void setNewImageSelected(boolean isNewImageSelected) {
         this.isNewImageSelected = isNewImageSelected;
+    }
+
+    public List<String> getColorFilesList() {
+        return colorFilesList;
+    }
+
+    public void setColorFilesList(List<String> colorFilesList) {
+        this.colorFilesList = colorFilesList;
+    }
+
+    public boolean isSoundOn() {
+        return isSoundOn;
+    }
+
+    public void setSoundOn(boolean isSoundOn) {
+        this.isSoundOn = isSoundOn;
     }
 }

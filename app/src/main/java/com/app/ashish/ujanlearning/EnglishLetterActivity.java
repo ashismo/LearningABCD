@@ -55,18 +55,13 @@ public class EnglishLetterActivity extends ActionBarActivity {
     private boolean isImgDescBlank = false;
 
 
-    @Override
-    public void finish(){
-        deinitText2Speech();
-        super.finish();
-    }
+//    @Override
+//    public void finish(){
+//        Utility.deinitText2Speech();
+//        super.finish();
+//    }
 
-    private void deinitText2Speech() {
-        if(test2Speech !=null){
-            test2Speech.stop();
-            test2Speech.shutdown();
-        }
-    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,23 +71,12 @@ public class EnglishLetterActivity extends ActionBarActivity {
 
         int selectedIntent = getIntent().getExtras().getInt(Constants.SELECTED_INTENT);
         int selectedNumberLimit = getIntent().getExtras().getInt(Constants.SELECTED_NUMBER_KEY);
-        Constants.SOUND_ENABLE_VALUE isSoundEnable = (Constants.SOUND_ENABLE_VALUE)getIntent().getExtras().get(Constants.SOUND_ENABLE_KEY);
+//        Constants.SOUND_ENABLE_VALUE isSoundEnable = (Constants.SOUND_ENABLE_VALUE)getIntent().getExtras().get(Constants.SOUND_ENABLE_KEY);
         englishLetters(selectedIntent, selectedNumberLimit);
 
         Utility.initAlphabetMap();
 
-        // Initialize text to speech object
-        if(isSoundEnable.equals(Constants.SOUND_ENABLE_VALUE.Y)) {
-            test2Speech = new TextToSpeech(getApplicationContext(),
-                    new TextToSpeech.OnInitListener() {
-                        @Override
-                        public void onInit(int status) {
-                            if (status != TextToSpeech.ERROR) {
-                                test2Speech.setLanguage(Locale.UK);
-                            }
-                        }
-                    });
-        }
+        test2Speech = Utility.getSpechInitialized(getApplicationContext());
     }
 
 
@@ -245,17 +229,7 @@ public class EnglishLetterActivity extends ActionBarActivity {
                                     imageView.startAnimation(mAnimationBottomRight);
                                 }
                                 String text2Speech = Utility.getTextByAlphabet(textView.getText().toString());
-                                if (test2Speech != null) {
-                                    test2Speech.setSpeechRate(0.6f);
-                                    test2Speech.speak(text2Speech, TextToSpeech.QUEUE_FLUSH, null);
-                                }
-                            /*else {
-                                if(numberIntentSelected == Constants.ENGLISH_NUMBER_VALUE) {
-                                    Toast.makeText(getApplicationContext(), text2Speech, Toast.LENGTH_LONG).show();
-                                } else {
-                                    Toast.makeText(getApplicationContext(), text2Speech.substring(5).toUpperCase(), Toast.LENGTH_LONG).show();
-                                }
-                            }*/
+                                Utility.speak(text2Speech);
 
                                 if (numberIntentSelected == Constants.ENGLISH_NUMBER_VALUE) {
                                     // Set description

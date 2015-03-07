@@ -37,5 +37,12 @@
             >
         </activity>
 
+        <!-- This Settings Activity is another child of main activity -->
+        <activity
+            android:name="com.app.ashish.ujanlearning.ColorGridActivity"
+            android:parentActivityName="com.app.ashish.ujanlearning.MainActivity"
+            >
+        </activity>
+
     </application>
 </manifest>

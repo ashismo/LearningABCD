@@ -34,7 +34,6 @@ import java.util.Random;
 
 public class MainActivity extends ActionBarActivity {
     private CheckBox soundEnabledCkBox = null;
-    private boolean isSoundEnabled = true;
     private int selectedNumber = 10;
 
     @Override
@@ -43,6 +42,7 @@ public class MainActivity extends ActionBarActivity {
         UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
         DatabaseUtil dbUtil = new DatabaseUtil(userSettings.getContext());
         dbUtil.updateUserSettings(Constants.EDIT_MODE_COL, "false");
+        Utility.deinitText2Speech();
         super.finish();
     }
 
@@ -77,7 +77,7 @@ public class MainActivity extends ActionBarActivity {
                 Intent intent = new Intent(getApplicationContext(), EnglishLetterActivity.class);
                 intent.putExtra(Constants.SELECTED_INTENT, Constants.ENGLISH_CAPS_VALUE);
                 UserSettingsSingleton.getUserSettings().setSelectedLearningOption(Constants.ENGLISH_CAPS_VALUE);
-                contrlSound(intent);
+//                contrlSound(intent);
                 startActivity(intent);
 
             }
@@ -92,7 +92,7 @@ public class MainActivity extends ActionBarActivity {
                 Intent intent = new Intent(getApplicationContext(), EnglishLetterActivity.class);
                 intent.putExtra(Constants.SELECTED_INTENT, Constants.ENGLISH_SMALL_VALUE);
                 UserSettingsSingleton.getUserSettings().setSelectedLearningOption(Constants.ENGLISH_SMALL_VALUE);
-                contrlSound(intent);
+//                contrlSound(intent);
                 startActivity(intent);
 
             }
@@ -139,6 +139,19 @@ public class MainActivity extends ActionBarActivity {
 
             }
         });
+
+        // Color functionality
+        ImageView colors = (ImageView)findViewById(R.id.colors);
+        colors.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ColorGridActivity.class);
+                UserSettingsSingleton.getUserSettings().setSelectedLearningOption(Constants.ENGLISH_COLOR_VALUE);
+//                contrlSound(intent);
+                startActivity(intent);
+
+            }
+        });
     }
 
     private void setNumbersVisible(ImageView engNumber10, ImageView engNumber20, ImageView engNumber100, int isVisible) {
@@ -153,7 +166,7 @@ public class MainActivity extends ActionBarActivity {
         UserSettingsSingleton.getUserSettings().setSelectedLearningOption(Constants.ENGLISH_NUMBER_VALUE);
 //        onNumberLimitClicked(v);
         intent.putExtra(Constants.SELECTED_NUMBER_KEY, selectedNumber);
-        contrlSound(intent);
+//        contrlSound(intent);
         startActivity(intent);
     }
 
@@ -182,15 +195,15 @@ public class MainActivity extends ActionBarActivity {
 //                break;
 //        }
 //    }
-    private void contrlSound(Intent intent) {
+    private void setSoundSelection() {
         final UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
         final DatabaseUtil dbUtil = new DatabaseUtil(userSettings.getContext());
         final String isSoundOn = dbUtil.getUserSettingsByParam(Constants.SOUND_ON);
 
         if(!"true".equals(isSoundOn)) {
-            intent.putExtra(Constants.SOUND_ENABLE_KEY, Constants.SOUND_ENABLE_VALUE.N);
+            userSettings.setSoundOn(false);
         } else {
-            intent.putExtra(Constants.SOUND_ENABLE_KEY, Constants.SOUND_ENABLE_VALUE.Y);
+            userSettings.setSoundOn(true);
         }
     }
 
@@ -239,31 +252,35 @@ public class MainActivity extends ActionBarActivity {
 
         if(!"true".equals(isSoundOn)) {
             soundEnabled.setImageResource(R.drawable.sound_off);
+            userSettings.setSoundOn(false);
         } else {
             soundEnabled.setImageResource(R.drawable.sound_on);
+            userSettings.setSoundOn(true);
         }
+        Utility.getSpechInitialized(getApplicationContext());
 
         soundEnabled.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 //is soundEnabledCkBox checked?
-//                UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
+                UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
 //                DatabaseUtil dbUtil = new DatabaseUtil(userSettings.getContext());
                 String isSoundOn = dbUtil.getUserSettingsByParam(Constants.SOUND_ON);
+                Utility.getSpechInitialized(getApplicationContext());
                 if(isSoundOn == null) {
                     dbUtil.updateUserSettings(Constants.SOUND_ON, "false");
+                    userSettings.setSoundOn(false);
                     soundEnabled.setImageResource(R.drawable.sound_off);
-                    isSoundEnabled = false;
                 } else {
                     if("true".equals(isSoundOn)) {
                         dbUtil.updateUserSettings(Constants.SOUND_ON, "false");
+                        userSettings.setSoundOn(false);
                         soundEnabled.setImageResource(R.drawable.sound_off);
-                        isSoundEnabled = false;
                     } else {
                         dbUtil.updateUserSettings(Constants.SOUND_ON, "true");
+                        userSettings.setSoundOn(true);
                         soundEnabled.setImageResource(R.drawable.sound_on);
-                        isSoundEnabled = true;
                     }
                 }
             }

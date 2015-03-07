@@ -1,0 +1,9 @@
+Steps to create android project in Android studio
+1. Create a project
+2. Create layout xml file in res/layout folder
+3. Create Activity class file for the respective layout xml
+4. Register the Activity class in AndroidManifest.xml file
+5. Declare start/launch activity in AndroidManifest.xml file
+
+1. Gridview example is used in Color learning functionality.
+2. FrameLayout example is used in Color Learning functionality because either Gridview or LinearLayout (on click of grid image) will be shown at a given point of time

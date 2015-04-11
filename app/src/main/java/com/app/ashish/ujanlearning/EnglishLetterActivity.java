@@ -18,6 +18,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -307,7 +308,7 @@ public class EnglishLetterActivity extends ActionBarActivity {
                                 // If selected text is empty then do not open the dialog box
                             if(!"".equals(selectedText)) {
                                 // Open a dialog
-                                openDialog(v);
+                                new DialogActivity(getApplicationContext(), EnglishLetterActivity.this).openDialog(v);
 
 
                                 // Display existing image. Do not allow delete the default image
@@ -338,7 +339,7 @@ public class EnglishLetterActivity extends ActionBarActivity {
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage(R.string.dialog_desc);
         // Get the layout inflater
-        LayoutInflater inflater =  (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater =  (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View mView = inflater.inflate(R.layout.activity_dialog_user_input, null);
         alertDialogBuilder.setView(mView);
 
@@ -378,6 +379,14 @@ public class EnglishLetterActivity extends ActionBarActivity {
         alertDialog = alertDialogBuilder.create();
         alertDialog.show();
 
+//        Button ok = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+//        if(ok != null) {
+//            ok.setBackgroundDrawable(getResources().getDrawable(R.drawable.ok));
+//        }
+//        Button cancel = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+//        if(cancel != null) {
+//            cancel.setBackgroundDrawable(getResources().getDrawable(R.drawable.cancel));
+//        }
         alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
             @Override
@@ -405,7 +414,7 @@ public class EnglishLetterActivity extends ActionBarActivity {
         });
 
         UserSettingsSingleton.getUserSettings().setAlertDialog(alertDialog);
-        Button imageButton = (Button)alertDialog.findViewById(R.id.select_image);
+        ImageButton imageButton = (ImageButton)alertDialog.findViewById(R.id.select_image);
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -415,7 +424,7 @@ public class EnglishLetterActivity extends ActionBarActivity {
         });
 
         // Set default Image
-        Button defaultImgBtn = (Button)alertDialog.findViewById(R.id.set_default_Image);
+        ImageButton defaultImgBtn = (ImageButton)alertDialog.findViewById(R.id.set_default_Image);
         defaultImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

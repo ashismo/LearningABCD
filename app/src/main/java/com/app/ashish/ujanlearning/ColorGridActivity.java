@@ -12,10 +12,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.app.ashish.constants.Constants;
 import com.app.ashish.singleton.UserSettingsSingleton;
 import com.app.ashish.util.Utility;
 
@@ -30,6 +32,8 @@ public class ColorGridActivity extends ActionBarActivity {
     private LinearLayout colorLinerLayout = null;
     private TextView imageText = null;
     private TextToSpeech text2Speech = null;
+    private boolean isEditMode = false;
+    private ImageView addImage = null;
 
 //    @Override
 //    public void finish() {
@@ -40,6 +44,7 @@ public class ColorGridActivity extends ActionBarActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.color_layout);
+
         colorIv = (ImageView) findViewById(R.id.colorLargeView);
         imageText = (TextView) findViewById(R.id.colorText);
 
@@ -81,6 +86,29 @@ public class ColorGridActivity extends ActionBarActivity {
                     colorLinerLayout.setVisibility(View.INVISIBLE);
                     gridView.setVisibility(View.VISIBLE);
                 }
+            }
+        });
+
+
+
+        // In edit mode, add button will be visible
+        isEditMode = UserSettingsSingleton.getUserSettings().isEditMode();
+        addImage = (ImageView)findViewById(R.id.add_color);
+        if(!isEditMode) {
+            addImage.setVisibility(View.INVISIBLE);
+        } else {
+            addImage.setVisibility(View.VISIBLE);
+        }
+
+        addImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserSettingsSingleton userSettings = UserSettingsSingleton.getUserSettings();
+
+                String selectedText = "";
+                userSettings.setSelectedText(selectedText);
+                // Open a dialog
+                new DialogActivity(getApplicationContext(), ColorGridActivity.this).openDialog(v);
             }
         });
     }

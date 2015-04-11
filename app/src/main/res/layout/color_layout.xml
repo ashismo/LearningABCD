@@ -1,29 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical" android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:visibility="visible">
         <GridView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/color_grid"
             android:horizontalSpacing="1dp"
-            android:verticalSpacing="5dp"
+            android:verticalSpacing="2dp"
             android:stretchMode="columnWidth"
             android:numColumns="auto_fit"
             android:columnWidth="120dp"
-            android:gravity="center"
-            android:minHeight="250dp"
-            android:minWidth="350dp" />
+            android:gravity="center" />
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:visibility="invisible"
             android:id="@+id/colorLayout">
             <TextView
@@ -36,5 +34,19 @@
                 android:id="@+id/colorLargeView"/>
         </LinearLayout>
 
+    </FrameLayout>
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible">
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/add_color"
+        android:fontFamily="sans-serif"
+        android:src="@drawable/add_color"
+        android:background="#ffffff"
+        android:layout_gravity="center"
+        android:scaleType="centerCrop" />
     </FrameLayout>
 </LinearLayout>

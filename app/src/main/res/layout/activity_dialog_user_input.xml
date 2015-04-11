@@ -2,21 +2,18 @@
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:weightSum="1"
-    android:background="#000000">
+    android:weightSum="1">
 
-    <LinearLayout
-        android:layout_height="52dp"
-        android:layout_width="wrap_content"
-        android:background="#000000">
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+    <FrameLayout
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_weight="100">
+        <!--<ImageButton
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:id="@+id/select_image"
-            android:fontFamily="sans-serif"
-            android:src="@drawable/change"
-            android:background="#000000" />
-        <!--<Button
+            android:fontFamily="sans-serif" />-->
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Select Another Image"
@@ -28,25 +25,24 @@
             android:layout_height="wrap_content"
             android:text="Set Default Image"
             android:id="@+id/set_default_Image"
-            android:layout_gravity="right" />-->
+            android:layout_gravity="right" />
 
-        <ImageButton
+        <!--<TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/set_default_Image"
-            android:fontFamily="sans-serif"
-            android:src="@drawable/restore"
-            android:background="#000000" />
-
-    </LinearLayout>
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:text="@string/select_image"
+            android:id="@+id/textOnImgBtn">
+        </TextView>-->
+    </FrameLayout>
 
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="100"
-        android:background="#000000">
+        android:layout_weight="100">
 
         <ImageView
             android:layout_width="fill_parent"
@@ -61,7 +57,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/rotate"
+            android:background="@drawable/rotate_img"
             android:id="@+id/rotate_button"
             android:layout_gravity="center"></Button>
     </LinearLayout>
@@ -75,10 +71,7 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="16dp"
         android:fontFamily="sans-serif"
-        android:hint="@string/image_desc"
-        android:background="#000000"
-        android:textColor="#ffffff"
-        android:textColorHint="#ffffff" />
+        android:hint="@string/image_desc"/>
 
 
 </LinearLayout>

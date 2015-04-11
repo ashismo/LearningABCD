@@ -5,5 +5,20 @@ Steps to create android project in Android studio
 4. Register the Activity class in AndroidManifest.xml file
 5. Declare start/launch activity in AndroidManifest.xml file
 
-1. Gridview example is used in Color learning functionality.
+1. Gridview example is used in Color learning functionality. (To use gridview, an adapter is required)
 2. FrameLayout example is used in Color Learning functionality because either Gridview or LinearLayout (on click of grid image) will be shown at a given point of time
+
+
+
+
+Challenges
+==========
+1. How to display a dialog from multiple activity classes?
+
+
+
+
+Questions
+==========
+1. What is application context in android?
+2. What is the difference between intent and inflater
